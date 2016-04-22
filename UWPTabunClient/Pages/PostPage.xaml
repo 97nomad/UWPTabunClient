@@ -1,0 +1,127 @@
+﻿<Page
+    x:Class="UWPTabunClient.PostPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWPTabunClient"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data ="using:UWPTabunClient.Models"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical">
+            <ProgressBar Name="LoadingBar"
+                         IsIndeterminate="True" />
+
+            <Grid Background="White"
+                  HorizontalAlignment="Stretch"
+                  Name="MainGrid"
+                  Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Name="TitleBlock"
+                           Grid.Row="0"
+                           FontSize="18"
+                           FontWeight="SemiBold"/>
+
+                <StackPanel Orientation="Horizontal"
+                    Grid.Row="1">
+                    <TextBlock Name="RatingBlock"
+                               Visibility="Collapsed"/>
+
+                    <Button Name="AuthorButton"
+                            Click="AuthorButton_Click"
+                            Style="{StaticResource InvisibleButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Name="AuthorImage" />
+                            <TextBlock Name="AuthorBlock" />
+                        </StackPanel>
+                    </Button>
+                    <TextBlock Text=" в блоге "
+                               Foreground="DarkGray"
+                               Margin="0,0,5,0"/>
+                    <Button Name="BlogButton"
+                            Click="BlogButton_Click"
+                            Style="{StaticResource InvisibleButton}">
+                        <TextBlock Name="BlogBlock" />
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Name="BodyPanel" 
+                    Grid.Row="2">
+                    <ScrollViewer>
+                        <RichTextBlock Name="BodyBlock" 
+                                       Style="{StaticResource StandartHtmlView}"/>
+                    </ScrollViewer>
+                </StackPanel>
+
+                <RelativePanel Grid.Row="3"
+                       Margin="0,0,20,0"
+                       Background="Gray">
+                    <TextBlock Text="Теги: "
+                       Name="tags"
+                       RelativePanel.AlignLeftWithPanel="True"/>
+                    <TextBlock Name="TagsBlock"
+                       RelativePanel.RightOf="tags" />
+                    <TextBlock Name="DateTimeBlock"
+                       RelativePanel.AlignRightWithPanel="True" />
+                </RelativePanel>
+
+                <ListView Grid.Row="4"
+                  Name="CommentsBlock"
+                  ItemsSource="{x:Bind comments}"
+                  SelectionMode="None">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Padding" Value="0" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="data:Comment">
+                            <StackPanel Orientation="Vertical" 
+                                    HorizontalAlignment="Stretch"
+                                    Margin="{x:Bind deep}"
+                                    Background="LightGray">
+                                <RichTextBlock DataContext="{x:Bind text}"
+                                               Style="{StaticResource StandartHtmlView}"
+                                               Loaded="RichTextBlock_Loaded"/>
+                                <RelativePanel HorizontalAlignment="Stretch"
+                                           Margin="0,0,20,0">
+                                    <Button Name="CommentAuthorButton"
+                                        RelativePanel.AlignLeftWithPanel="True"
+                                        Tag="{x:Bind author}"
+                                        Click="CommentAuthorButton_Click"
+                                        Style="{StaticResource InvisibleButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="{x:Bind author_image}"
+                                               x:Name="imageContorl"/>
+                                            <TextBlock Text="{x:Bind author}"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Name="LeaveCommentButton"
+                                            RelativePanel.RightOf="CommentAuthorButton"
+                                            Content="Ответить"
+                                            Style="{StaticResource InvisibleButton}"
+                                            Click="LeaveCommentButton_Click"
+                                            Margin="20,0,0,0"/>
+
+                                    <TextBlock Text="{x:Bind rating}"
+                                           RelativePanel.AlignRightWithPanel="True"
+                                           Foreground="{x:Bind ratingColor}"
+                                           FontWeight="Bold"/>
+                                </RelativePanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

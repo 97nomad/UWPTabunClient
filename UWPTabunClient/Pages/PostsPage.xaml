@@ -1,0 +1,119 @@
+﻿<Page
+    x:Class="UWPTabunClient.PostsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWPTabunClient"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:UWPTabunClient.Models"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical">
+            <ProgressBar IsIndeterminate="True"
+                     Name="LoadingBar"/>
+
+            <ListView Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                      Name="PostsList"
+                      ItemsSource="{x:Bind posts, Mode=OneWay}"
+                      SelectionMode="None"
+                      IsItemClickEnabled="True"
+                      ItemClick="PostsList_ItemClick"
+                      Visibility="Collapsed">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="data:Post">
+                        <Grid VerticalAlignment="Top"
+                              HorizontalAlignment="Stretch"
+                              Background="{ThemeResource AppBarBackgroundThemeBrush}"
+                              Margin="5,5,10,5"
+                              Tag="{x:Bind id}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="{x:Bind title}"
+                                       Name="TitleBlock"
+                                       Grid.Row="0"
+                                       TextWrapping="WrapWholeWords"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="SemiBold"
+                                       FontSize="18"/>
+
+                            <RelativePanel Grid.Row="1">
+                                <Button RelativePanel.AlignLeftWithPanel="True" 
+                                        Name="AuthorBlock"
+                                        Click="AuthorBlock_Click"
+                                        Tag="{x:Bind author}"
+                                        Style="{StaticResource InvisibleButton}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{x:Bind author_image}"
+                                               x:Name="imageContorl"/>
+                                        <TextBlock Text="{x:Bind author}" />
+                                    </StackPanel>
+                                </Button>
+                                <TextBlock Text=" в блоге "
+                                           Name="in_blog"
+                                           RelativePanel.RightOf="AuthorBlock"
+                                           Foreground="DarkGray"/>
+                                <Button RelativePanel.RightOf="in_blog"
+                                        Name="BlogButton"
+                                        Click="BlogButton_Click"
+                                        Style="{StaticResource InvisibleButton}"
+                                        Tag="{x:Bind blog_id}">
+                                    <TextBlock Text="{x:Bind blog}" />
+                                </Button>
+                                <TextBlock Text="{x:Bind rating}" 
+                                   RelativePanel.AlignRightWithPanel="True"/>
+                            </RelativePanel>
+
+                            <StackPanel Orientation="Vertical" Grid.Row="2">
+                                <RichTextBlock DataContext="{x:Bind text}" 
+                                       Style="{StaticResource StandartHtmlView}"
+                                       Loaded="RichTextBlock_Loaded"/>
+                            </StackPanel>
+
+                            <RelativePanel Grid.Row="3">
+                                <StackPanel Orientation="Horizontal" 
+                                    RelativePanel.AlignLeftWithPanel="True"
+                                    RelativePanel.LeftOf="datetime">
+                                    <TextBlock Text="Теги: "
+                                   Name="_tags"/>
+                                    <TextBlock Text="{x:Bind tags}"
+                                       RelativePanel.RightOf="_tags"
+                                       TextWrapping="WrapWholeWords"
+                                       Margin="10,0,10,0"/>
+                                </StackPanel>
+                                <TextBlock Text="{x:Bind datatime}" 
+                                   Name="datetime"
+                                   RelativePanel.AlignRightWithPanel="True"
+                                   Margin="0,0,10,0"/>
+                            </RelativePanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+            <RelativePanel>
+                <Button Name="BackButton"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        Visibility="Collapsed"
+                        Content="Назад"
+                        Click="BackButton_Click"
+                        Width="150"/>
+                <Button Name="ForwardButton"
+                        RelativePanel.AlignRightWithPanel="True"
+                        Visibility="Collapsed"
+                        Content="Вперёд"
+                        Click="ForwardButton_Click"
+                        Width="150"/>
+            </RelativePanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

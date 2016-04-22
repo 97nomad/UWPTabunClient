@@ -1,0 +1,51 @@
+﻿<Page
+    x:Class="UWPTabunClient.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWPTabunClient"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:UWPTabunClient.Models" 
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+    <RelativePanel Grid.Row="0" Background="{ThemeResource AppBarBackgroundThemeBrush}">
+            <Button Click="PanelButton_Click" 
+                    Name="PanelButton"
+                    RelativePanel.AlignLeftWithPanel="True" >
+                <TextBlock FontFamily="Segoe MDL2 Assets" 
+                           Text=""
+                           FontSize="28"/>
+            </Button>
+            <Frame Name="ProfileFrame"
+                   RelativePanel.AlignRightWithPanel="True"/>
+        </RelativePanel>
+    <SplitView Name="MainMenu" DisplayMode="Inline" Grid.Row="1">
+            <SplitView.Pane>
+                <ListView Name="PaneList"
+                          ItemClick="PaneList_ItemClick"
+                          IsItemClickEnabled="True"
+                          SelectionMode="None">
+                    <StackPanel Orientation="Horizontal"
+                                Name="Home">
+                        <SymbolIcon Symbol="Home"/>
+                        <TextBlock Text=" Домой" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
+                                Name="Stream">
+                        <SymbolIcon Symbol="Bullets" />
+                        <TextBlock Text="Прямой эфир" />
+                    </StackPanel>
+                </ListView>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Frame Name="MainFrame" />
+            </SplitView.Content>
+        </SplitView>
+    </Grid>
+</Page>

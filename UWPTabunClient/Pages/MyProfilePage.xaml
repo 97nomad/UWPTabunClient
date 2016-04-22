@@ -1,0 +1,47 @@
+﻿    <Page
+    x:Class="UWPTabunClient.Pages.MyProfilePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWPTabunClient.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Button Style="{StaticResource InvisibleButton}"
+            Click="Button_Click"
+            Name="ProfileButton">
+        <StackPanel>
+            <StackPanel Orientation="Horizontal"
+                    Margin="0,0,10,0"
+                    Visibility="Collapsed"
+                    Name="LoginPanel">
+                <Image Name="ProfileImage"
+                   MaxWidth="40"
+                   MaxHeight="40"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Name="LoginBlock"               
+                           Margin="5,0,0,0"
+                           FontWeight="SemiBold"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Name="ForceBlock"
+                           Margin="10,0,0,0"
+                           Foreground="Red"
+                           FontSize="12"/>
+                        <TextBlock Name="VotesBlock"
+                           Margin="10,0,0,0"
+                           Foreground="Green"
+                           FontSize="12"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        Visibility="Collapsed"
+                        Name="SinginPanel">
+                <TextBlock Text="Войти"
+                           FontSize="18"/>
+            </StackPanel>
+        </StackPanel>
+    </Button>
+</Page>

@@ -1,0 +1,15 @@
+﻿<ContentDialog
+    x:Class="UWPTabunClient.Pages.ExitDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWPTabunClient.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    
+    PrimaryButtonText="Я передумал"
+    SecondaryButtonText="Выйти"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+
+    <TextBlock Text="Вы действительно хотите выйти?" />
+</ContentDialog>

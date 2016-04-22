@@ -1,0 +1,100 @@
+﻿<Page
+    x:Class="UWPTabunClient.Pages.StreamPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWPTabunClient.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:UWPTabunClient.Models"
+    mc:Ignorable="d">
+
+    <Pivot>
+        <PivotItem Header="Комментарии"
+                   Name="CommentsItem"
+                   Loaded="CommentsItem_Loaded">
+            <ListView Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+              Name="StreamListComments"
+              ItemsSource="{x:Bind streamElementsComments}"
+              SelectionMode="None"
+              IsItemClickEnabled="True"
+              ItemClick="StreamList_ItemClick">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="data:StreamElement">
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Name="AuthorButton"
+                                Click="AuthorButton_Click"
+                                Tag="{x:Bind author}"
+                                Style="{StaticResource InvisibleButton}"
+                                Content="{x:Bind author}"/>
+                                <TextBlock Text="в"
+                                   Margin="10,0,10,0"/>
+                                <TextBlock Name="BlogButton"
+                                   Text="{x:Bind blog}"
+                                   TextWrapping ="Wrap"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Name="TopicButton"
+                                   Text="{x:Bind topic}"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap"/>
+                                <TextBlock Name="CommentsCount"
+                                   Text="{x:Bind comments_count}"
+                                   Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </PivotItem>
+
+        <PivotItem Header="Публикации"
+                   Name="TopicsItem"
+                   Loaded="TopicsItem_Loaded">
+            <ListView Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+              Name="StreamListTopics"
+              ItemsSource="{x:Bind streamElementsTopics}"
+              SelectionMode="None"
+              IsItemClickEnabled="True"
+              ItemClick="StreamList_ItemClick">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="data:StreamElement">
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Name="AuthorButton"
+                                Click="AuthorButton_Click"
+                                Tag="{x:Bind author}"
+                                Style="{StaticResource InvisibleButton}"
+                                Content="{x:Bind author}"/>
+                                <TextBlock Text="в"
+                                   Margin="10,0,10,0"/>
+                                <TextBlock Name="BlogButton"
+                                   Text="{x:Bind blog}"
+                                   TextWrapping ="Wrap"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Name="TopicButton"
+                                   Text="{x:Bind topic}"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap"/>
+                                <TextBlock Name="CommentsCount"
+                                   Text="{x:Bind comments_count}"
+                                   Margin="10,0,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </PivotItem>
+    </Pivot>
+</Page>
