@@ -12,7 +12,7 @@ using Windows.Graphics.Imaging;
 using Newtonsoft.Json;
 using UWPTabunClient.Models;
 
-namespace UWPTabunClient
+namespace UWPTabunClient.Managers
 {
     class WebManager
     {

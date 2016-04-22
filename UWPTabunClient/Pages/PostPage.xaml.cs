@@ -19,7 +19,7 @@ using UWPTabunClient.Parsers;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace UWPTabunClient
+namespace UWPTabunClient.Pages
 {
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.

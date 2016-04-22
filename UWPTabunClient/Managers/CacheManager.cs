@@ -9,7 +9,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace UWPTabunClient
+namespace UWPTabunClient.Managers
 {
     class CacheManager
     {
