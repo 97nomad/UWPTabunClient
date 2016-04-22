@@ -127,8 +127,8 @@
     <Compile Include="Pages\PostPage.xaml.cs">
       <DependentUpon>PostPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\PostsPage.xaml.cs">
-      <DependentUpon>PostsPage.xaml</DependentUpon>
+    <Compile Include="Pages\MainpagePage.xaml.cs">
+      <DependentUpon>MainpagePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
@@ -204,7 +204,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\PostsPage.xaml">
+    <Page Include="Pages\MainpagePage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -69,19 +69,20 @@ namespace UWPTabunClient.Managers
                 cookieContainer.Add(new Uri("http://tabun.everypony.ru"),
                     new Cookie("TABUNSESSIONID", (storage.Values["sessionId"] as string)));
 
-            HttpClient client = new HttpClient(handler);
+            using (HttpClient client = new HttpClient(handler))
+            {
+                var response = await client.GetAsync(uri);
 
-            var response = await client.GetAsync(uri);
+                response.EnsureSuccessStatusCode();
+                string resultString = await response.Content.ReadAsStringAsync();
 
-            response.EnsureSuccessStatusCode();
-            string resultString = await response.Content.ReadAsStringAsync();
-
-            return resultString;
+                return resultString;
+            }
         }
 
         public async Task<SoftwareBitmap> getCachedImageAsync(string url)
         {
-            // Провека, если изображение в пуле
+            // Провека, есть ли изображение в пуле
             foreach (KeyValuePair<string, SoftwareBitmap> kvp in imagePool)
             {
                 if (kvp.Key == url)
@@ -99,7 +100,6 @@ namespace UWPTabunClient.Managers
             // Проверка на существование файла на диске
             if (await CacheManager.isFileActual(path, filename))
             {
-                //Debug.WriteLine("Файл существует. Загрузка с диска");
                 SoftwareBitmap bitmap = await CacheManager.readImageFile(path, filename);
 
                 return bitmap;
@@ -126,7 +126,7 @@ namespace UWPTabunClient.Managers
                     Debug.WriteLine("Ошибка при загрузке изображения: " + uri);
                 }
 
-                if (bitmap != null)
+                if (bitmap != null) // Если картинка загрузилась
                 {
                     await CacheManager.createImageFile(path, filename, bitmap); // Запись загруженного файла на диск
                     imagePool.Add(new KeyValuePair<string, SoftwareBitmap>(url, bitmap));

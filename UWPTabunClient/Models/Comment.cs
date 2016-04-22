@@ -22,7 +22,7 @@ namespace UWPTabunClient.Models
 
         public Windows.UI.Xaml.Thickness deep { get
             {
-                return new Windows.UI.Xaml.Thickness(getDeep()*10   , 1, 1, 1);
+                return new Windows.UI.Xaml.Thickness(getDeep() * 10, 1, 1, 1);
             } }
 
         public string ratingColor { get

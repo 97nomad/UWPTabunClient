@@ -35,9 +35,5 @@ namespace UWPTabunClient.Models
             datatime = "";
 
         }
-
-        
-
     }
-
 }

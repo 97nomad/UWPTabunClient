@@ -9,13 +9,7 @@ namespace UWPTabunClient.Parsers
 {
     class AbstractParser
     {
-#if (LOCALMIRROR)
-        protected const string siteDomain = "127.0.0.1";
-        protected const string profileword = "/profile";
-#else
         protected const string siteDomain = "tabun.everypony.ru";
-        protected const string profileword = "";
-#endif
         protected WebManager webManager;
 
         public AbstractParser()
@@ -50,6 +44,7 @@ namespace UWPTabunClient.Parsers
 
             return false;
         }
+
         protected bool isAttributeValueContains(HtmlAttributeCollection attributes, string attr, string str)
         {
             try
@@ -65,17 +60,12 @@ namespace UWPTabunClient.Parsers
 
         public static string normalizeImageUriDebug(string uri)
         {
-#if (LOCALMIRROR)
-            return "http://" + siteDomain + uri.TrimStart('.');
-#else
             if (uri.Contains("https://") || uri.Contains("http://"))
                 return uri;
             else
             {
-                //Debug.WriteLine("Кривая ссылка normalizeImageUriDebug " + uri);
                 return "http://" + uri.TrimStart('/');
             }
-#endif
         }
 
         public static string normalizeUri(string uri)
@@ -87,8 +77,6 @@ namespace UWPTabunClient.Parsers
             }
             return uri;
         }
-
-
 
         public static string getLivestreetSecurityKey(HtmlNode page)
         {
