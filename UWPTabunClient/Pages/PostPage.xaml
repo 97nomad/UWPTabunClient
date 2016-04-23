@@ -110,7 +110,8 @@
                                             Content="Ответить"
                                             Style="{StaticResource InvisibleButton}"
                                             Click="LeaveCommentButton_Click"
-                                            Margin="20,0,0,0"/>
+                                            Margin="20,0,0,0"
+                                            Tag="{x:Bind id}"/>
 
                                     <TextBlock Text="{x:Bind rating}"
                                            RelativePanel.AlignRightWithPanel="True"

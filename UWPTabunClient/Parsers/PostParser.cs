@@ -14,6 +14,7 @@ namespace UWPTabunClient.Parsers
     {
         HtmlNode rootNode;
         public HtmlParser htmlParser;
+        public int postId;
 
         public PostParser()
         {
@@ -22,6 +23,7 @@ namespace UWPTabunClient.Parsers
 
         public async Task<bool> loadPage(string name)
         {
+            int.TryParse(name, out postId);
             rootNode = await getRootNodeOfPage("http://" + siteDomain + "/" + name + ".html");
             if (rootNode == null)
                 return false;

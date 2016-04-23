@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Navigation;
 using UWPTabunClient.Models;
 using UWPTabunClient.Pages;
 using UWPTabunClient.Parsers;
+using System.Diagnostics;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -107,7 +108,7 @@ namespace UWPTabunClient.Pages
 
         private async void LeaveCommentButton_Click(object sender, RoutedEventArgs e)
         {
-            LeaveCommentDialog dialog = new LeaveCommentDialog();
+            LeaveCommentDialog dialog = new LeaveCommentDialog(parser.postId, int.Parse((sender as Button).Tag.ToString()));
             await dialog.ShowAsync();
         }
     }

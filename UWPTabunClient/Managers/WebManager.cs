@@ -23,25 +23,22 @@ namespace UWPTabunClient.Managers
             imagePool = new List<KeyValuePair<string, SoftwareBitmap>>();
         }
 
-        public static async Task<string> getAjaxAsync(string uri)
+        public async Task<string> getAjaxAsync(string uri, List<KeyValuePair<string, string>> list = null)
         {
             var storage = Windows.Storage.ApplicationData.Current.LocalSettings;
             HttpWebRequest request = WebRequest.Create(uri) as HttpWebRequest;
-            CookieContainer cookieContainer = new CookieContainer();
-
-            if (storage.Values["sessionId"] != null)
-                cookieContainer.Add(new Uri("http://tabun.everypony.ru"),
-                    new Cookie("TABUNSESSIONID", (storage.Values["sessionId"] as string)));
-
+            
             request.ContentType = "application/x-www-form-urlencoded; charset=UTF-8";
             request.Accept = "application/json, text/javascript, */*; q=0.01";
             request.Method = "POST";
             request.Headers["X-Requested-With"] = "XMLHttpRequest";
-            request.CookieContainer = cookieContainer;
 
             using (StreamWriter writer = new StreamWriter(await request.GetRequestStreamAsync()))
             {
-                writer.Write("security_ls_key=" + storage.Values["livestreet_security_key"] as string);
+                writer.WriteLine("security_ls_key=" + storage.Values["livestreet_security_key"] as string);
+                if (list != null)
+                    foreach (KeyValuePair<string, string> pair in list)
+                        writer.WriteLine(pair.Key + "=" + pair.Value);
                 writer.Flush();
             }
 
