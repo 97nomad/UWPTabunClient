@@ -47,10 +47,10 @@ namespace UWPTabunClient.Pages
             BlogButton.Tag = post.blog_id;
 
             BodyBlock.Blocks.Add(post.text);
-            //CrutchManager.crutchForButtonsInRichTextBlock(Frame, BodyBlock);
-            //BodyBlock.DataContext = post.text;
+
             TagsBlock.Text = post.tags;
             DateTimeBlock.Text = post.datatime;
+            CommentsCountBlock.Text = post.commentsCount;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

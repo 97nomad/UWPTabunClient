@@ -32,7 +32,7 @@ namespace UWPTabunClient.Parsers
                 return false;
             else
                 return true;
-        }
+       } 
 
         public async Task<List<StreamElement>> getStreamElements(bool isComment)
         {

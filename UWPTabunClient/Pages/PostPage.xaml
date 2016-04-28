@@ -64,13 +64,24 @@
                 <RelativePanel Grid.Row="3"
                        Margin="0,0,20,0"
                        Background="Gray">
-                    <TextBlock Text="Теги: "
-                       Name="tags"
-                       RelativePanel.AlignLeftWithPanel="True"/>
-                    <TextBlock Name="TagsBlock"
-                       RelativePanel.RightOf="tags" />
+                    <StackPanel RelativePanel.AlignLeftWithPanel="True"
+                                RelativePanel.AlignTopWithPanel="True"
+                                Orientation="Horizontal">
+                        <TextBlock Text="Теги: "/>
+                        <TextBlock Name="TagsBlock"/>
+                    </StackPanel>
+
                     <TextBlock Name="DateTimeBlock"
-                       RelativePanel.AlignRightWithPanel="True" />
+                               RelativePanel.AlignRightWithPanel="True"
+                               RelativePanel.AlignTopWithPanel="True"/>
+                    
+                    <StackPanel RelativePanel.Below="DateTimeBlock"
+                                RelativePanel.AlignLeftWithPanel="True"
+                                Orientation="Horizontal">
+                        <TextBlock Name="CommentsCountBlock"/>
+                        <TextBlock Text="комментариев "
+                                   Margin="5,0,0,0"/>
+                    </StackPanel>
                 </RelativePanel>
 
                 <ListView Grid.Row="4"

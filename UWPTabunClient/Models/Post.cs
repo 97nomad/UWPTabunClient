@@ -17,9 +17,12 @@ namespace UWPTabunClient.Models
         public string blog;
         public string blog_id;
         public string rating;
+        public string votesTotal;
         public Paragraph text;
         public string tags;
         public string datatime;
+        public string commentsCount;
+        public string commentsNewCount;
 
         public Post()
         {
@@ -30,9 +33,12 @@ namespace UWPTabunClient.Models
             blog = "";
             blog_id = "";
             rating = "";
+            votesTotal = "";
             text = new Paragraph();
             tags = "";
             datatime = "";
+            commentsCount = "";
+            commentsNewCount = "";
 
         }
     }

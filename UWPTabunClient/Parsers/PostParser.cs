@@ -19,6 +19,7 @@ namespace UWPTabunClient.Parsers
         public PostParser()
         {
             htmlParser = new HtmlParser();
+            postId = 1;
         }
 
         public async Task<bool> loadPage(string name)
@@ -42,6 +43,8 @@ namespace UWPTabunClient.Parsers
             var articleHeader = getFirstDescendant(rootNode, "header");
             var articleFooter = getFirstDescendant(rootNode, "footer");
 
+            resultPost.id = postId;
+
             resultPost.title = getInnerTextFromFirstDescendantWithAttribute(article, "h1", "class", "topic-title word-wrap");
 
             resultPost.author = getInnerTextFromFirstDescendantWithAttribute(article, "a", "rel", "author");
@@ -61,6 +64,8 @@ namespace UWPTabunClient.Parsers
                 .Attributes["href"].Value);
 
             resultPost.rating = getInnerTextFromFirstDescendantWithAttribute(article, "div", "class", "vote-item vote-count");
+            resultPost.votesTotal = getFirstDescendantWithAttribute(article, "div", "class", "vote-item vote-count")
+                .Attributes["title"].Value;
 
             resultPost.text = await htmlParser.convertNodeToParagraph(
                 getFirstDescendantWithAttribute(article, "div", "class", "topic-content text"));
@@ -71,6 +76,8 @@ namespace UWPTabunClient.Parsers
             {
                 resultPost.tags += HtmlEntity.DeEntitize(node.InnerText) + " ";
             }
+
+            resultPost.commentsCount = getInnerTextFromFirstDescendantWithAttribute(rootNode, "span", "id", "count-comments");
 
             return resultPost;
         }
