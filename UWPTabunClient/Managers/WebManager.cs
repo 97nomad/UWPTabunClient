@@ -17,10 +17,12 @@ namespace UWPTabunClient.Managers
     class WebManager
     {
         private List<KeyValuePair<string, SoftwareBitmap>> imagePool;
+        private CacheManager cache;
 
         public WebManager()
         {
             imagePool = new List<KeyValuePair<string, SoftwareBitmap>>();
+            cache = new CacheManager();
         }
 
         public async Task<string> getAjaxAsync(string uri, List<KeyValuePair<string, string>> list = null)
@@ -87,17 +89,12 @@ namespace UWPTabunClient.Managers
             }
 
             // Преобразуем строку в Uri
-            Uri uri = new Uri(url);
-            string path = uri.Host;
-            foreach (string str in uri.Segments.Take(uri.Segments.Length - 1))
-                path += str.Replace(".", String.Empty);
-            path = path.Replace('/', '\\');
-            string filename = uri.Segments.Last();
+            KeyValuePair<string, string> uri = convertPathFilenameFromUri(url);
 
             // Проверка на существование файла на диске
-            if (await CacheManager.isFileActual(path, filename))
+            if (cache.isFileActual(url))
             {
-                SoftwareBitmap bitmap = await CacheManager.readImageFile(path, filename);
+                SoftwareBitmap bitmap = await cache.readImageFile(url);
 
                 return bitmap;
             } else
@@ -109,7 +106,7 @@ namespace UWPTabunClient.Managers
                 {
                     using (HttpClient client = new HttpClient())
                     {
-                        var response = await client.GetAsync(uri);
+                        var response = await client.GetAsync(url);
                         response.EnsureSuccessStatusCode();
 
                         Stream inputStream = await response.Content.ReadAsStreamAsync();
@@ -125,7 +122,7 @@ namespace UWPTabunClient.Managers
 
                 if (bitmap != null) // Если картинка загрузилась
                 {
-                    await CacheManager.createImageFile(path, filename, bitmap); // Запись загруженного файла на диск
+                    await cache.createImageFile(url, bitmap); // Запись загруженного файла на диск
                     imagePool.Add(new KeyValuePair<string, SoftwareBitmap>(url, bitmap));
                     return bitmap;
                 }
@@ -133,6 +130,19 @@ namespace UWPTabunClient.Managers
 
             return null;
 
+        }
+
+        public static KeyValuePair<string, string> convertPathFilenameFromUri(string url)
+        {
+            Uri uri = new Uri(url);
+            string path = uri.Host;
+
+            foreach (string str in uri.Segments.Take(uri.Segments.Length - 1))
+                path += str.Replace(".", String.Empty);
+            path = path.Replace('/', '\\');
+            string filename = uri.Segments.Last();
+
+            return new KeyValuePair<string, string>(path, filename);
         }
     }
 }

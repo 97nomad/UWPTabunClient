@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
@@ -7,12 +8,31 @@ namespace UWPTabunClient.Managers
 {
     class CacheManager
     {
-        public static async Task<bool> createImageFile(string path, string name, SoftwareBitmap image)
-        {
-            StorageFolder storageFolder = 
-                await ApplicationData.Current.LocalFolder.CreateFolderAsync(path, CreationCollisionOption.OpenIfExists);
+        ApplicationDataCompositeValue filesInCache;
+        ApplicationDataContainer localSettings;
 
-            StorageFile storageFile = await storageFolder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
+        public CacheManager()
+        {
+            localSettings = ApplicationData.Current.LocalSettings;
+            if (localSettings.Values["filesInCache"] == null)
+                filesInCache = new ApplicationDataCompositeValue();
+        }
+
+        private void addFilesInCacheDictionary(KeyValuePair<string, string> uri)
+        {
+            (localSettings.Values["filesInCache"] as ApplicationDataCompositeValue).Add(uri.Key, uri.Value);
+        }
+
+        public async Task<bool> createImageFile(string uri, SoftwareBitmap image)
+        {
+            KeyValuePair<string, string> PathNamePair = WebManager.convertPathFilenameFromUri(uri);
+
+            StorageFolder storageFolder = 
+                await ApplicationData.Current.LocalFolder
+                    .CreateFolderAsync(PathNamePair.Key, CreationCollisionOption.OpenIfExists);
+
+            StorageFile storageFile = await storageFolder
+                    .CreateFileAsync(PathNamePair.Value, CreationCollisionOption.ReplaceExisting);
 
             using (var stream = await storageFile.OpenAsync(FileAccessMode.ReadWrite))
             {
@@ -22,15 +42,20 @@ namespace UWPTabunClient.Managers
                 await encoder.FlushAsync();
             }
 
+            addFilesInCacheDictionary(PathNamePair);
+
             return true;
         }
 
-        public static async Task<SoftwareBitmap> readImageFile(string path, string name)
+        public async Task<SoftwareBitmap> readImageFile(string uri)
         {
-            StorageFolder storageFolder =
-                await ApplicationData.Current.LocalFolder.CreateFolderAsync(path, CreationCollisionOption.OpenIfExists);
+            KeyValuePair<string, string> PathNamePair = WebManager.convertPathFilenameFromUri(uri);
 
-            StorageFile storageFile = await storageFolder.GetFileAsync(name);
+            StorageFolder storageFolder =
+                await ApplicationData.Current.LocalFolder
+                    .CreateFolderAsync(PathNamePair.Key, CreationCollisionOption.OpenIfExists);
+
+            StorageFile storageFile = await storageFolder.GetFileAsync(PathNamePair.Value);
 
             using (var stream = await storageFile.OpenAsync(FileAccessMode.Read))
             {
@@ -43,16 +68,10 @@ namespace UWPTabunClient.Managers
             }
         }
 
-        public static async Task<bool> isFileActual(string path, string name)
+        public bool isFileActual(string uri)
         {
-            try {
-                StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync(path);
-                StorageFile storageFile = await storageFolder.GetFileAsync(name);
-            } catch (Exception)
-            {
+            if (filesInCache.Values.Contains(uri) == false)
                 return false;
-            }
-
             return true;
         }
     }
