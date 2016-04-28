@@ -36,17 +36,9 @@ namespace UWPTabunClient.Pages
             parser = new StreamParser();
         }
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            /*if (await parser.loadPage())
-            {
-                streamElementsComments = await parser.getStreamElements();
-                Bindings.Update();
-            } else
-            {
-                Frame.Navigate(typeof(ErrorPage), "Ошибка при загрузке страницы");
-            }*/
         }
 
         private void StreamList_ItemClick(object sender, ItemClickEventArgs e)
@@ -63,14 +55,26 @@ namespace UWPTabunClient.Pages
 
         private async void CommentsItem_Loaded(object sender, RoutedEventArgs e)
         {
-            streamElementsComments = await parser.getStreamElements(true);
-            Bindings.Update();
+            try
+            {
+                streamElementsComments = await parser.getStreamElements(true);
+                Bindings.Update();
+            } catch (Exception exc)
+            {
+                Frame.Navigate(typeof(ErrorPage), exc.Message);
+            }
         }
 
         private async void TopicsItem_Loaded(object sender, RoutedEventArgs e)
         {
-            streamElementsTopics = await parser.getStreamElements(false);
-            Bindings.Update();
+            try
+            {
+                streamElementsTopics = await parser.getStreamElements(false);
+                Bindings.Update();
+            } catch (Exception exc)
+            {
+                Frame.Navigate(typeof(ErrorPage), exc.Message);
+            }
         }
     }
 }
