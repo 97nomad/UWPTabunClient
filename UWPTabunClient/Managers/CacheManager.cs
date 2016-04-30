@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
@@ -8,19 +9,8 @@ namespace UWPTabunClient.Managers
 {
     class CacheManager
     {
-        ApplicationDataCompositeValue filesInCache;
-        ApplicationDataContainer localSettings;
-
         public CacheManager()
         {
-            localSettings = ApplicationData.Current.LocalSettings;
-            if (localSettings.Values["filesInCache"] == null)
-                filesInCache = new ApplicationDataCompositeValue();
-        }
-
-        private void addFilesInCacheDictionary(KeyValuePair<string, string> uri)
-        {
-            (localSettings.Values["filesInCache"] as ApplicationDataCompositeValue).Add(uri.Key, uri.Value);
         }
 
         public async Task<bool> createImageFile(string uri, SoftwareBitmap image)
@@ -41,8 +31,6 @@ namespace UWPTabunClient.Managers
 
                 await encoder.FlushAsync();
             }
-
-            addFilesInCacheDictionary(PathNamePair);
 
             return true;
         }
@@ -68,11 +56,18 @@ namespace UWPTabunClient.Managers
             }
         }
 
-        public bool isFileActual(string uri)
+        public async Task<bool> isFileActual(string uri)
         {
-            if (filesInCache.Values.Contains(uri) == false)
+            KeyValuePair<string, string> PathNamePair = WebManager.convertPathFilenameFromUri(uri);
+
+            StorageFolder storageFolder =
+                await ApplicationData.Current.LocalFolder
+                    .CreateFolderAsync(PathNamePair.Key, CreationCollisionOption.OpenIfExists);
+
+            if (storageFolder.TryGetItemAsync(PathNamePair.Value) == null)
                 return false;
-            return true;
+            else
+                return true;
         }
     }
 }

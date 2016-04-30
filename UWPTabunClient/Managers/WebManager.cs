@@ -92,7 +92,7 @@ namespace UWPTabunClient.Managers
             KeyValuePair<string, string> uri = convertPathFilenameFromUri(url);
 
             // Проверка на существование файла на диске
-            if (cache.isFileActual(url))
+            if (await cache.isFileActual(url))
             {
                 SoftwareBitmap bitmap = await cache.readImageFile(url);
 
