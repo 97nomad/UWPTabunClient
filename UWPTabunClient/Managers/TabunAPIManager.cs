@@ -10,16 +10,23 @@ using UWPTabunClient.Models;
 
 namespace UWPTabunClient.Managers
 {
-    class TabunAPIManager : WebManager
+    class TabunAPIManager
     {
+        private WebManager webManager;
+
+        public TabunAPIManager()
+        {
+            webManager = WebManager.Instance;
+        }
+
         public async Task<string> getStreamComments()
         {
-            return await getAjaxAsync("https://tabun.everypony.ru/ajax/stream/comment/");
+            return await webManager.getAjaxAsync("https://tabun.everypony.ru/ajax/stream/comment/");
         }
 
         public async Task<string> getStreamTopics()
         {
-            return await getAjaxAsync("https://tabun.everypony.ru/ajax/stream/topic/");
+            return await webManager.getAjaxAsync("https://tabun.everypony.ru/ajax/stream/topic/");
         }
 
         public async Task<string> addComment(int post_id, int reply, string text, bool isPost = true)
@@ -30,7 +37,7 @@ namespace UWPTabunClient.Managers
             list.Add(new KeyValuePair<string, string>("reply", reply.ToString()));
             list.Add(new KeyValuePair<string, string>("cmt_target_id", post_id.ToString()));
 
-            return await getAjaxAsync(uri, list);
+            return await webManager.getAjaxAsync(uri, list);
         }
     }
 }

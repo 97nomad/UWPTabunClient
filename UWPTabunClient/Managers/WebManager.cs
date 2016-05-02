@@ -14,12 +14,16 @@ using UWPTabunClient.Models;
 
 namespace UWPTabunClient.Managers
 {
-    class WebManager
+    sealed class WebManager
     {
-        private List<KeyValuePair<string, SoftwareBitmap>> imagePool;
+        private static readonly Lazy<WebManager> InstanceField = new Lazy<WebManager>(() => new WebManager());
+
+        private List<KeyValuePair<string, SoftwareBitmap>> imagePool;   // Кажется, тут что-то течёт
         private CacheManager cache;
 
-        public WebManager()
+        public static WebManager Instance { get { return InstanceField.Value; } }
+
+        private WebManager()
         {
             imagePool = new List<KeyValuePair<string, SoftwareBitmap>>();
             cache = new CacheManager();

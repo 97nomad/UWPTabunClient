@@ -14,7 +14,7 @@ namespace UWPTabunClient.Parsers
 
         public AbstractParser()
         {
-            webManager = new WebManager();
+            webManager = WebManager.Instance;
         }
 
         public async Task<HtmlNode> getRootNodeOfPage(string url)
