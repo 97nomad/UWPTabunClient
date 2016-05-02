@@ -16,10 +16,11 @@ using Windows.UI.Xaml.Navigation;
 using UWPTabunClient.Models;
 using UWPTabunClient.Pages;
 using UWPTabunClient.Parsers;
+using System.Diagnostics;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace UWPTabunClient
+namespace UWPTabunClient.Pages
 {
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
@@ -46,10 +47,10 @@ namespace UWPTabunClient
             BlogButton.Tag = post.blog_id;
 
             BodyBlock.Blocks.Add(post.text);
-            //CrutchManager.crutchForButtonsInRichTextBlock(Frame, BodyBlock);
-            //BodyBlock.DataContext = post.text;
+
             TagsBlock.Text = post.tags;
             DateTimeBlock.Text = post.datatime;
+            CommentsCountBlock.Text = post.commentsCount;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -107,7 +108,7 @@ namespace UWPTabunClient
 
         private async void LeaveCommentButton_Click(object sender, RoutedEventArgs e)
         {
-            LeaveCommentDialog dialog = new LeaveCommentDialog();
+            LeaveCommentDialog dialog = new LeaveCommentDialog(parser.postId, int.Parse((sender as Button).Tag.ToString()));
             await dialog.ShowAsync();
         }
     }

@@ -21,17 +21,17 @@ using UWPTabunClient.Pages;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace UWPTabunClient
+namespace UWPTabunClient.Pages
 {
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
-    public sealed partial class PostsPage : Page
+    public sealed partial class MainpagePage : Page
     {
         private List<Post> posts;
         private MainpageParser parser;
 
-        public PostsPage()
+        public MainpagePage()
         {
             this.InitializeComponent();
             parser = new MainpageParser();
@@ -98,12 +98,12 @@ namespace UWPTabunClient
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(PostsPage), parser.PageNumber - 1);
+            Frame.Navigate(typeof(MainpagePage), parser.PageNumber - 1);
         }
 
         private void ForwardButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(PostsPage), parser.PageNumber + 1);
+            Frame.Navigate(typeof(MainpagePage), parser.PageNumber + 1);
         }
     }
 }

@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Documents;
 using UWPTabunClient.Pages;
 using UWPTabunClient.Parsers;
 
-namespace UWPTabunClient
+namespace UWPTabunClient.Managers
 {
     class CrutchManager
     {

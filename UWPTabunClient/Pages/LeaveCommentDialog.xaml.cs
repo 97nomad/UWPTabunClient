@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UWPTabunClient.Managers;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -20,20 +21,31 @@ namespace UWPTabunClient.Pages
 {
     public sealed partial class LeaveCommentDialog : ContentDialog
     {
-        public LeaveCommentDialog()
+        TabunAPIManager api;
+        int post_id;
+        int reply;
+
+        public LeaveCommentDialog(int postid, int comment)
         {
             this.InitializeComponent();
+            api = new TabunAPIManager();
+            post_id = postid;
+            reply = comment;
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
         }
 
-        private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private async void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {            
             string text = "";
             TextBoxComment.Document.GetText(Windows.UI.Text.TextGetOptions.None, out text);
             Debug.WriteLine(text);
+            if (text != "")
+            {
+                string response = await api.addComment(post_id, reply, text);
+            }
         }
 
         private void BoldButton_Click(object sender, RoutedEventArgs e)

@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="UWPTabunClient.PostPage"
+    x:Class="UWPTabunClient.Pages.PostPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UWPTabunClient"
@@ -64,13 +64,24 @@
                 <RelativePanel Grid.Row="3"
                        Margin="0,0,20,0"
                        Background="Gray">
-                    <TextBlock Text="Теги: "
-                       Name="tags"
-                       RelativePanel.AlignLeftWithPanel="True"/>
-                    <TextBlock Name="TagsBlock"
-                       RelativePanel.RightOf="tags" />
+                    <StackPanel RelativePanel.AlignLeftWithPanel="True"
+                                RelativePanel.AlignTopWithPanel="True"
+                                Orientation="Horizontal">
+                        <TextBlock Text="Теги: "/>
+                        <TextBlock Name="TagsBlock"/>
+                    </StackPanel>
+
                     <TextBlock Name="DateTimeBlock"
-                       RelativePanel.AlignRightWithPanel="True" />
+                               RelativePanel.AlignRightWithPanel="True"
+                               RelativePanel.AlignTopWithPanel="True"/>
+                    
+                    <StackPanel RelativePanel.Below="DateTimeBlock"
+                                RelativePanel.AlignLeftWithPanel="True"
+                                Orientation="Horizontal">
+                        <TextBlock Name="CommentsCountBlock"/>
+                        <TextBlock Text="комментариев "
+                                   Margin="5,0,0,0"/>
+                    </StackPanel>
                 </RelativePanel>
 
                 <ListView Grid.Row="4"
@@ -110,7 +121,8 @@
                                             Content="Ответить"
                                             Style="{StaticResource InvisibleButton}"
                                             Click="LeaveCommentButton_Click"
-                                            Margin="20,0,0,0"/>
+                                            Margin="20,0,0,0"
+                                            Tag="{x:Bind id}"/>
 
                                     <TextBlock Text="{x:Bind rating}"
                                            RelativePanel.AlignRightWithPanel="True"

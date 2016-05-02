@@ -33,7 +33,7 @@ namespace UWPTabunClient
             currentView.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             currentView.BackRequested += MainPage_BackRequested;
 
-            MainFrame.Navigate(typeof(PostsPage));
+            MainFrame.Navigate(typeof(MainpagePage));
             ProfileFrame.Navigate(typeof(MyProfilePage));
         }
 
@@ -46,7 +46,7 @@ namespace UWPTabunClient
         {
             StackPanel item = (e.ClickedItem as StackPanel);
             if (item.Name == "Home")
-                MainFrame.Navigate(typeof(PostsPage));
+                MainFrame.Navigate(typeof(MainpagePage));
             if (item.Name == "Stream")
                 MainFrame.Navigate(typeof(StreamPage)); 
             MainMenu.IsPaneOpen = false;

@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using UWPTabunClient.Managers;
 using UWPTabunClient.Models;
 
 namespace UWPTabunClient.Parsers
@@ -11,26 +11,32 @@ namespace UWPTabunClient.Parsers
     class StreamParser : AbstractParser
     {
         HtmlNode rootNode;
+        TabunAPIManager api;
 
-        private async Task<bool> loadPage(string uri)
+        public StreamParser()
         {
-            //rootNode = await getRootNodeOfPage(addr);
+            api = new TabunAPIManager();
+        }
+
+        private async Task<bool> loadPage(bool isComment)
+        {
             HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(await WebManager.getAjaxAsync(uri));
+
+            if (isComment)
+                doc.LoadHtml(await api.getStreamComments());
+            else
+                doc.LoadHtml(await api.getStreamTopics());
             rootNode = doc.DocumentNode;
+
             if (rootNode == null)
                 return false;
             else
                 return true;
-
-        }
+       } 
 
         public async Task<List<StreamElement>> getStreamElements(bool isComment)
         {
-            if (isComment)
-                await loadPage("http://tabun.everypony.ru/ajax/stream/comment/");
-            else
-                await loadPage("http://tabun.everypony.ru/ajax/stream/topic/");
+            await loadPage(isComment);
 
             List<StreamElement> resultList = new List<StreamElement>();
 

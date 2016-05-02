@@ -1,30 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using System.Diagnostics;
-using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml;
-using Windows.UI.ViewManagement;
-using Windows.UI.Text;
+using UWPTabunClient.Managers;
 
 namespace UWPTabunClient.Parsers
 {
     class AbstractParser
     {
-#if (LOCALMIRROR)
-        protected const string siteDomain = "127.0.0.1";
-        protected const string profileword = "/profile";
-#else
         protected const string siteDomain = "tabun.everypony.ru";
-        protected const string profileword = "";
-#endif
         protected WebManager webManager;
 
         public AbstractParser()
@@ -59,6 +44,7 @@ namespace UWPTabunClient.Parsers
 
             return false;
         }
+
         protected bool isAttributeValueContains(HtmlAttributeCollection attributes, string attr, string str)
         {
             try
@@ -74,17 +60,12 @@ namespace UWPTabunClient.Parsers
 
         public static string normalizeImageUriDebug(string uri)
         {
-#if (LOCALMIRROR)
-            return "http://" + siteDomain + uri.TrimStart('.');
-#else
             if (uri.Contains("https://") || uri.Contains("http://"))
                 return uri;
             else
             {
-                //Debug.WriteLine("Кривая ссылка normalizeImageUriDebug " + uri);
-                return "http://" + uri.TrimStart('/');
+                return "https://" + uri.TrimStart('/');
             }
-#endif
         }
 
         public static string normalizeUri(string uri)
@@ -92,12 +73,10 @@ namespace UWPTabunClient.Parsers
             if (uri.First() == '/')
             {
                 Debug.WriteLine("Кривая ссылка normalizeUri " + uri);
-                return "http://" + siteDomain + uri;
+                return "https://" + siteDomain + uri;
             }
             return uri;
         }
-
-
 
         public static string getLivestreetSecurityKey(HtmlNode page)
         {

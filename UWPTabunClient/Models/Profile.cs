@@ -31,7 +31,6 @@ namespace UWPTabunClient.Models
                 return Colors.Black;
             } }
 
-        //public string about;
         public Paragraph about;
 
         public string sex;

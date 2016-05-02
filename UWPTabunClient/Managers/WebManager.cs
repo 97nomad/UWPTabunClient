@@ -12,36 +12,35 @@ using Windows.Graphics.Imaging;
 using Newtonsoft.Json;
 using UWPTabunClient.Models;
 
-namespace UWPTabunClient
+namespace UWPTabunClient.Managers
 {
     class WebManager
     {
         private List<KeyValuePair<string, SoftwareBitmap>> imagePool;
+        private CacheManager cache;
 
         public WebManager()
         {
             imagePool = new List<KeyValuePair<string, SoftwareBitmap>>();
+            cache = new CacheManager();
         }
 
-        public static async Task<string> getAjaxAsync(string uri)
+        public async Task<string> getAjaxAsync(string uri, List<KeyValuePair<string, string>> list = null)
         {
             var storage = Windows.Storage.ApplicationData.Current.LocalSettings;
             HttpWebRequest request = WebRequest.Create(uri) as HttpWebRequest;
-            CookieContainer cookieContainer = new CookieContainer();
-
-            if (storage.Values["sessionId"] != null)
-                cookieContainer.Add(new Uri("http://tabun.everypony.ru"),
-                    new Cookie("TABUNSESSIONID", (storage.Values["sessionId"] as string)));
-
+            
             request.ContentType = "application/x-www-form-urlencoded; charset=UTF-8";
             request.Accept = "application/json, text/javascript, */*; q=0.01";
             request.Method = "POST";
             request.Headers["X-Requested-With"] = "XMLHttpRequest";
-            request.CookieContainer = cookieContainer;
 
             using (StreamWriter writer = new StreamWriter(await request.GetRequestStreamAsync()))
             {
-                writer.Write("security_ls_key=" + storage.Values["livestreet_security_key"] as string);
+                writer.WriteLine("security_ls_key=" + storage.Values["livestreet_security_key"] as string);
+                if (list != null)
+                    foreach (KeyValuePair<string, string> pair in list)
+                        writer.WriteLine(pair.Key + "=" + pair.Value);
                 writer.Flush();
             }
 
@@ -69,19 +68,20 @@ namespace UWPTabunClient
                 cookieContainer.Add(new Uri("http://tabun.everypony.ru"),
                     new Cookie("TABUNSESSIONID", (storage.Values["sessionId"] as string)));
 
-            HttpClient client = new HttpClient(handler);
+            using (HttpClient client = new HttpClient(handler))
+            {
+                var response = await client.GetAsync(uri);
 
-            var response = await client.GetAsync(uri);
+                response.EnsureSuccessStatusCode();
+                string resultString = await response.Content.ReadAsStringAsync();
 
-            response.EnsureSuccessStatusCode();
-            string resultString = await response.Content.ReadAsStringAsync();
-
-            return resultString;
+                return resultString;
+            }
         }
 
         public async Task<SoftwareBitmap> getCachedImageAsync(string url)
         {
-            // Провека, если изображение в пуле
+            // Провека, есть ли изображение в пуле
             foreach (KeyValuePair<string, SoftwareBitmap> kvp in imagePool)
             {
                 if (kvp.Key == url)
@@ -89,18 +89,12 @@ namespace UWPTabunClient
             }
 
             // Преобразуем строку в Uri
-            Uri uri = new Uri(url);
-            string path = uri.Host;
-            foreach (string str in uri.Segments.Take(uri.Segments.Length - 1))
-                path += str.Replace(".", String.Empty);
-            path = path.Replace('/', '\\');
-            string filename = uri.Segments.Last();
+            KeyValuePair<string, string> uri = convertPathFilenameFromUri(url);
 
             // Проверка на существование файла на диске
-            if (await CacheManager.isFileActual(path, filename))
+            if (await cache.isFileActual(url))
             {
-                //Debug.WriteLine("Файл существует. Загрузка с диска");
-                SoftwareBitmap bitmap = await CacheManager.readImageFile(path, filename);
+                SoftwareBitmap bitmap = await cache.readImageFile(url);
 
                 return bitmap;
             } else
@@ -112,7 +106,7 @@ namespace UWPTabunClient
                 {
                     using (HttpClient client = new HttpClient())
                     {
-                        var response = await client.GetAsync(uri);
+                        var response = await client.GetAsync(url);
                         response.EnsureSuccessStatusCode();
 
                         Stream inputStream = await response.Content.ReadAsStreamAsync();
@@ -126,9 +120,9 @@ namespace UWPTabunClient
                     Debug.WriteLine("Ошибка при загрузке изображения: " + uri);
                 }
 
-                if (bitmap != null)
+                if (bitmap != null) // Если картинка загрузилась
                 {
-                    await CacheManager.createImageFile(path, filename, bitmap); // Запись загруженного файла на диск
+                    await cache.createImageFile(url, bitmap); // Запись загруженного файла на диск
                     imagePool.Add(new KeyValuePair<string, SoftwareBitmap>(url, bitmap));
                     return bitmap;
                 }
@@ -136,6 +130,19 @@ namespace UWPTabunClient
 
             return null;
 
+        }
+
+        public static KeyValuePair<string, string> convertPathFilenameFromUri(string url)
+        {
+            Uri uri = new Uri(url);
+            string path = uri.Host;
+
+            foreach (string str in uri.Segments.Take(uri.Segments.Length - 1))
+                path += str.Replace(".", String.Empty);
+            path = path.Replace('/', '\\');
+            string filename = uri.Segments.Last();
+
+            return new KeyValuePair<string, string>(path, filename);
         }
     }
 }

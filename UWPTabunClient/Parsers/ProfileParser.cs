@@ -98,16 +98,6 @@ namespace UWPTabunClient.Parsers
                 }
             }
 
-            /*List<KeyValuePair<string, string>> profileBlogConsistIn = new List<KeyValuePair<string, string>>();
-            if (profileConsistsIn != null)
-            {
-                foreach (HtmlNode node in getArrayDescendants(profileConsistsIn, "a"))
-                {
-                    profileBlogConsistIn.Add(
-                        new KeyValuePair<string, string>(
-                            node.InnerText, node.Attributes["href"].Value));
-                }
-            }*/
             var profileBlogConsistIn = await htmlParser.convertNodeToParagraph(profileConsistsIn);
 
             HtmlNode profileFriendsNode = getFirstDescendantWithAttribute(profileLeft, "ul", "class", "user-list-avatar");
@@ -119,7 +109,7 @@ namespace UWPTabunClient.Parsers
                 var friendName = node.InnerText.Trim();
                 SoftwareBitmapSource source = new SoftwareBitmapSource();
                 await source.SetBitmapAsync(
-                    await webManager.getCachedImageAsync(normalizeImageUriDebug(profileword + friendAvatarPath)));
+                    await webManager.getCachedImageAsync(normalizeImageUriDebug(friendAvatarPath)));
                 profileFriends.Add(new Friend
                 {
                     avatar_100x100 = source,
@@ -141,14 +131,14 @@ namespace UWPTabunClient.Parsers
             await profileBigPhoto.SetBitmapAsync(
                 await webManager.getCachedImageAsync(
                     normalizeImageUriDebug(
-                        profileword + getFirstDescendantWithAttribute(rootNode, "img", "class", "profile-photo")
+                        getFirstDescendantWithAttribute(rootNode, "img", "class", "profile-photo")
                         .Attributes["src"].Value)));
 
             SoftwareBitmapSource profileAvatar_100x100 = new SoftwareBitmapSource();
             await profileAvatar_100x100.SetBitmapAsync(
                 await webManager.getCachedImageAsync(
                     normalizeImageUriDebug(
-                        profileword + getFirstDescendantWithAttribute(rootNode, "img", "itemprop", "photo")
+                        getFirstDescendantWithAttribute(rootNode, "img", "itemprop", "photo")
                         .Attributes["src"].Value)));
 
             Profile resultProfile = new Profile

@@ -22,11 +22,7 @@ namespace UWPTabunClient.Parsers
 
         public async Task<bool> loadPage(string name)
         {
-#if (LOCALMIRROR)
-            string addr = "http://" + siteDomain + "/blog/" + name + ".html";
-#else
             string addr = "http://" + siteDomain + "/blog/" + name + "/";
-#endif
 
             rootNode = await getRootNodeOfPage(addr);
             if (rootNode == null)
