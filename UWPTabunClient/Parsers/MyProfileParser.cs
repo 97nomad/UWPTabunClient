@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UWPTabunClient.Managers;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace UWPTabunClient.Parsers
@@ -14,11 +15,7 @@ namespace UWPTabunClient.Parsers
 
         public async Task<bool> loadPage()
         {
-#if (LOCALMIRROR)
-            string addr = "http://" + siteDomain + "/tabun.html";
-#else
-            string addr = "http://" + siteDomain + "/";
-#endif
+            string addr = GlobalVariables.linkRoot;
 
             rootNode = await getRootNodeOfPage(addr);
 

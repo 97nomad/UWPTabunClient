@@ -7,6 +7,7 @@ using UWPTabunClient.Models;
 using HtmlAgilityPack;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Controls;
+using UWPTabunClient.Managers;
 
 namespace UWPTabunClient.Parsers
 {
@@ -25,7 +26,7 @@ namespace UWPTabunClient.Parsers
         public async Task<bool> loadPage(string name)
         {
             int.TryParse(name, out postId);
-            rootNode = await getRootNodeOfPage("http://" + siteDomain + "/" + name + ".html");
+            rootNode = await getRootNodeOfPage(GlobalVariables.linkRoot + name + ".html");
             if (rootNode == null)
                 return false;
             else

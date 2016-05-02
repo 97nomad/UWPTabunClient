@@ -18,10 +18,10 @@ namespace UWPTabunClient.Managers
     {
         private static readonly Lazy<WebManager> InstanceField = new Lazy<WebManager>(() => new WebManager());
 
+        public static WebManager Instance { get { return InstanceField.Value; } }
+
         private List<KeyValuePair<string, SoftwareBitmap>> imagePool;   // Кажется, тут что-то течёт
         private CacheManager cache;
-
-        public static WebManager Instance { get { return InstanceField.Value; } }
 
         private WebManager()
         {
@@ -69,7 +69,7 @@ namespace UWPTabunClient.Managers
 
             var storage = Windows.Storage.ApplicationData.Current.LocalSettings;
             if (storage.Values["sessionId"] != null)
-                cookieContainer.Add(new Uri("http://tabun.everypony.ru"),
+                cookieContainer.Add(new Uri(GlobalVariables.linkRoot),
                     new Cookie("TABUNSESSIONID", (storage.Values["sessionId"] as string)));
 
             using (HttpClient client = new HttpClient(handler))

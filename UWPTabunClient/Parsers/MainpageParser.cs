@@ -7,6 +7,7 @@ using HtmlAgilityPack;
 using UWPTabunClient.Models;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Controls;
+using UWPTabunClient.Managers;
 
 namespace UWPTabunClient.Parsers
 {
@@ -28,11 +29,8 @@ namespace UWPTabunClient.Parsers
             else
                 PageNumber = pagenumber;
 
-#if (LOCALMIRROR)
-            string addr = "http://" + siteDomain + "/tabun.html";
-#else
-            string addr = "http://" + siteDomain + "/index/page" + PageNumber + "/";
-#endif
+            string addr = GlobalVariables.linkMainpage + "page" + PageNumber + "/";
+
             rootNode = await getRootNodeOfPage(addr);
             if (rootNode == null)
                 return false;

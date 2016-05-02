@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using UWPTabunClient.Models;
+using UWPTabunClient.Managers;
 
 namespace UWPTabunClient.Parsers
 {
@@ -22,7 +23,7 @@ namespace UWPTabunClient.Parsers
 
         public async Task<bool> loadPage(string name)
         {
-            string addr = "http://" + siteDomain + "/blog/" + name + "/";
+            string addr = GlobalVariables.linkBlog + name + "/";
 
             rootNode = await getRootNodeOfPage(addr);
             if (rootNode == null)

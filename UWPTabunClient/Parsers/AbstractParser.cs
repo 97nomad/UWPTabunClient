@@ -9,7 +9,6 @@ namespace UWPTabunClient.Parsers
 {
     class AbstractParser
     {
-        protected const string siteDomain = "tabun.everypony.ru";
         protected WebManager webManager;
 
         public AbstractParser()
@@ -73,7 +72,7 @@ namespace UWPTabunClient.Parsers
             if (uri.First() == '/')
             {
                 Debug.WriteLine("Кривая ссылка normalizeUri " + uri);
-                return "https://" + siteDomain + uri;
+                return GlobalVariables.linkRoot + uri;
             }
             return uri;
         }

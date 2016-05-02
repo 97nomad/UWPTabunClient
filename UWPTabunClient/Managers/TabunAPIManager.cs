@@ -21,17 +21,17 @@ namespace UWPTabunClient.Managers
 
         public async Task<string> getStreamComments()
         {
-            return await webManager.getAjaxAsync("https://tabun.everypony.ru/ajax/stream/comment/");
+            return await webManager.getAjaxAsync(GlobalVariables.linkAjaxStreamComments);
         }
 
         public async Task<string> getStreamTopics()
         {
-            return await webManager.getAjaxAsync("https://tabun.everypony.ru/ajax/stream/topic/");
+            return await webManager.getAjaxAsync(GlobalVariables.linkAjaxStreamTopics);
         }
 
         public async Task<string> addComment(int post_id, int reply, string text, bool isPost = true)
         {
-            string uri = "https://tabun.everypony.ru/blog/ajaxaddcomment/";
+            string uri = GlobalVariables.linkAjaxAddComment;
             List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
             list.Add(new KeyValuePair<string, string>("comment_text", text));
             list.Add(new KeyValuePair<string, string>("reply", reply.ToString()));

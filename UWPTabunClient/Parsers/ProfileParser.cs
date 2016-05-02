@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Graphics.Imaging;
+using UWPTabunClient.Managers;
 
 namespace UWPTabunClient.Parsers
 {
@@ -24,11 +25,7 @@ namespace UWPTabunClient.Parsers
 
         public async Task<bool> loadPage(string page)
         {
-#if (LOCALMIRROR)
-            string addr = "http://" + siteDomain + "/profile/" + page + ".html";
-#else
-            string addr = "http://" + siteDomain + "/profile/" + page + "/";
-#endif
+            string addr = GlobalVariables.linkProfile + page + "/";
             rootNode = await getRootNodeOfPage(addr);
             if (rootNode == null)
                 return false;
