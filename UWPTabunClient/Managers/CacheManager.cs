@@ -64,7 +64,7 @@ namespace UWPTabunClient.Managers
                 await ApplicationData.Current.LocalFolder
                     .CreateFolderAsync(PathNamePair.Key, CreationCollisionOption.OpenIfExists);
 
-            if (storageFolder.TryGetItemAsync(PathNamePair.Value) == null)
+            if (await storageFolder.TryGetItemAsync(PathNamePair.Value) == null)
                 return false;
             else
                 return true;
