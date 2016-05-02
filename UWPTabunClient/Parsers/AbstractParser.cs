@@ -64,7 +64,7 @@ namespace UWPTabunClient.Parsers
                 return uri;
             else
             {
-                return "http://" + uri.TrimStart('/');
+                return "https://" + uri.TrimStart('/');
             }
         }
 
@@ -73,7 +73,7 @@ namespace UWPTabunClient.Parsers
             if (uri.First() == '/')
             {
                 Debug.WriteLine("Кривая ссылка normalizeUri " + uri);
-                return "http://" + siteDomain + uri;
+                return "https://" + siteDomain + uri;
             }
             return uri;
         }
