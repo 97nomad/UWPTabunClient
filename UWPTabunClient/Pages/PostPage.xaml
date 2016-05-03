@@ -85,9 +85,8 @@
                 </RelativePanel>
 
                 <ListView Grid.Row="4"
-                  Name="CommentsBlock"
-                  ItemsSource="{x:Bind comments}"
-                  SelectionMode="None">
+                          Name="CommentsBlock"
+                          SelectionMode="None">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />

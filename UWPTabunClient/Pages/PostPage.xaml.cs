@@ -53,6 +53,14 @@ namespace UWPTabunClient.Pages
             CommentsCountBlock.Text = post.commentsCount;
         }
 
+        private void LoadComments()
+        {
+            foreach (Comment c in comments)
+            {
+                CommentsBlock.Items.Add(c);
+            }
+        }
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -66,8 +74,7 @@ namespace UWPTabunClient.Pages
                     post = await parser.getPost();
                     comments = (await parser.getComments()).Descendants();
                     LoadPost();
-
-                    Bindings.Update();
+                    LoadComments();
                 } catch (Exception exp)
                 {
                     Frame.Navigate(typeof(ErrorPage), exp.Message);

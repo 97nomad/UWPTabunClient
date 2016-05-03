@@ -13,7 +13,7 @@ namespace UWPTabunClient.Managers
         public static string linkMainpage = "https://tabun.everypony.ru/index/";
         public static string linkProfile = "https://tabun.everypony.ru/profile/";
 
-        public static string linkAjaxStreamComments = "https://tabun.everypony.ru/ajax/stream/comments/";
+        public static string linkAjaxStreamComments = "https://tabun.everypony.ru/ajax/stream/comment/";
         public static string linkAjaxStreamTopics = "https://tabun.everypony.ru/ajax/stream/topic/";
         public static string linkAjaxAddComment = "https://tabun.everypony.ru/blog/ajaxaddcomment/";
     }
