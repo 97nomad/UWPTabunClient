@@ -25,9 +25,10 @@ namespace UWPTabunClient.Parsers
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(page);
                 return doc.DocumentNode;
-            } catch (Exception)
+            } catch (Exception exc)
             {
                 Debug.WriteLine("Ошибка при загрузке страницы " + url);
+                Debug.WriteLine(exc.Message);
                 return null;
             }
         }

@@ -22,7 +22,7 @@ namespace UWPTabunClient.Managers
 
         private List<KeyValuePair<string, SoftwareBitmap>> imagePool;   // Кажется, тут что-то течёт
         private CacheManager cache;
-
+        
         private WebManager()
         {
             imagePool = new List<KeyValuePair<string, SoftwareBitmap>>();
