@@ -22,26 +22,27 @@
                            Text=""
                            FontSize="28"/>
             </Button>
-            <Frame Name="ProfileFrame"
-                   RelativePanel.AlignRightWithPanel="True"/>
         </RelativePanel>
     <SplitView Name="MainMenu" DisplayMode="Inline" Grid.Row="1">
             <SplitView.Pane>
-                <ListView Name="PaneList"
-                          ItemClick="PaneList_ItemClick"
-                          IsItemClickEnabled="True"
-                          SelectionMode="None">
-                    <StackPanel Orientation="Horizontal"
-                                Name="Home">
-                        <SymbolIcon Symbol="Home"/>
-                        <TextBlock Text=" Домой" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal"
-                                Name="Stream">
-                        <SymbolIcon Symbol="Bullets" />
-                        <TextBlock Text="Прямой эфир" />
-                    </StackPanel>
-                </ListView>
+                <StackPanel Orientation="Vertical">
+                    <Frame Name="ProfileFrame"/>
+                    <ListView Name="PaneList"
+                              ItemClick="PaneList_ItemClick"
+                              IsItemClickEnabled="True"
+                              SelectionMode="None">
+                        <StackPanel Orientation="Horizontal"
+                                    Name="Home">
+                            <SymbolIcon Symbol="Home"/>
+                            <TextBlock Text=" Домой" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal"
+                                    Name="Stream">
+                            <SymbolIcon Symbol="Bullets" />
+                            <TextBlock Text="Прямой эфир" />
+                        </StackPanel>
+                    </ListView>
+                </StackPanel>
             </SplitView.Pane>
             <SplitView.Content>
                 <Frame Name="MainFrame" />
