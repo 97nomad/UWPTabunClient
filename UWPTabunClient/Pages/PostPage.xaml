@@ -98,7 +98,7 @@
                             <StackPanel Orientation="Vertical" 
                                     HorizontalAlignment="Stretch"
                                     Margin="{x:Bind deep}"
-                                    Background="LightGray">
+                                    Background="{x:Bind backgroundColor}">
                                 <RichTextBlock DataContext="{x:Bind text}"
                                                Style="{StaticResource StandartHtmlView}"
                                                Loaded="RichTextBlock_Loaded"/>

@@ -23,6 +23,7 @@ namespace UWPTabunClient.Models
         public string datatime;
         public string commentsCount;
         public string commentsNewCount;
+        public int lastComment;
 
         public Post()
         {
@@ -39,7 +40,7 @@ namespace UWPTabunClient.Models
             datatime = "";
             commentsCount = "";
             commentsNewCount = "";
-
+            lastComment = 0;
         }
     }
 }

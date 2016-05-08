@@ -17,10 +17,13 @@ namespace UWPTabunClient.Parsers
         public HtmlParser htmlParser;
         public int postId;
 
+        private int lastComment;
+
         public PostParser()
         {
             htmlParser = new HtmlParser();
             postId = 1;
+            lastComment = 0;
         }
 
         public async Task<bool> loadPage(string name)
@@ -80,6 +83,11 @@ namespace UWPTabunClient.Parsers
 
             resultPost.commentsCount = getInnerTextFromFirstDescendantWithAttribute(rootNode, "span", "id", "count-comments");
 
+            lastComment = int.Parse(
+                getFirstDescendantWithAttribute(rootNode, "div", "id", "new_comments_counter")
+                .Attributes["data-id-comment-last"].Value);
+            resultPost.lastComment = lastComment;
+
             return resultPost;
         }
 
@@ -121,6 +129,10 @@ namespace UWPTabunClient.Parsers
                             .Value)));
 
                     comment.id = Int32.Parse(section.Attributes["data-id"].Value);
+
+                    if (isAttributeValueContains(section.Attributes, "class", "comment-new"))
+                        comment.isRead = false;
+
                     comment.text = await htmlParser.convertNodeToParagraph(getFirstDescendantWithAttribute(section, "div", "class", "text"));
 
                     comment.author = section.Descendants("ul")
