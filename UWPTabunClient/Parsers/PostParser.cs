@@ -8,6 +8,7 @@ using HtmlAgilityPack;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Controls;
 using UWPTabunClient.Managers;
+using Newtonsoft.Json;
 
 namespace UWPTabunClient.Parsers
 {
@@ -34,6 +35,37 @@ namespace UWPTabunClient.Parsers
                 return false;
             else
                 return true;
+        }
+
+        public async Task<Comment> refreshComments()
+        {
+            Dictionary<string, string> parameters = new Dictionary<string,string>
+            {
+                { "idCommentLast", lastComment.ToString()},
+                { "idTarget", postId.ToString() },
+                { "typeTarget", "topic" }
+            };
+
+            var jsonText = await webManager.getPostAsync(GlobalVariables.linkAjaxResponseComment, parameters);
+            var json = JsonConvert.DeserializeObject<JsonResponseComment>(jsonText);
+
+            Comment resultComments = new Comment();
+
+            if (json.aComments.Count == 0)
+                return new Comment();
+
+            foreach (Dictionary<string, string> dic in json.aComments)
+            {
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(dic["html"].ToString());
+                await parseLevel(doc.DocumentNode, resultComments);
+            }
+
+            //var commentSection = getFirstDescendantWithAttribute(rootNode, "div", "class", "comments");
+
+            //await parseLevel(commentSection, resultComments);
+
+            return resultComments;
         }
 
         public async Task<Post> getPost()

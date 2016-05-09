@@ -105,6 +105,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Friend.cs" />
     <Compile Include="Models\JsonResponse.cs" />
+    <Compile Include="Models\JsonResponseComment.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Models\Profile.cs" />
     <Compile Include="Models\StreamElement.cs" />

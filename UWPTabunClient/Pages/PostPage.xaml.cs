@@ -118,5 +118,10 @@ namespace UWPTabunClient.Pages
             LeaveCommentDialog dialog = new LeaveCommentDialog(parser.postId, int.Parse((sender as Button).Tag.ToString()));
             await dialog.ShowAsync();
         }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            await parser.refreshComments();
+        }
     }
 }

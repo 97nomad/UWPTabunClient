@@ -23,6 +23,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock Name="TitleBlock"
@@ -132,6 +133,10 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+
+                <Button Grid.Row="5"
+                        Content="Обновить комментарии"
+                        Click="Button_Click"/>
             </Grid>
         </StackPanel>
     </ScrollViewer>

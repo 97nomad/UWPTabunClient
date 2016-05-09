@@ -16,5 +16,6 @@ namespace UWPTabunClient.Managers
         public static string linkAjaxStreamComments = "https://tabun.everypony.ru/ajax/stream/comment/";
         public static string linkAjaxStreamTopics = "https://tabun.everypony.ru/ajax/stream/topic/";
         public static string linkAjaxAddComment = "https://tabun.everypony.ru/blog/ajaxaddcomment/";
+        public static string linkAjaxResponseComment = "https://tabun.everypony.ru/blog/ajaxresponsecomment/";
     }
 }

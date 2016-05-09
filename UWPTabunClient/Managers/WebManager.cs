@@ -29,6 +29,20 @@ namespace UWPTabunClient.Managers
             cache = new CacheManager();
         }
 
+        public async Task<string> getPostAsync(string uri, Dictionary<string, string> list = null)
+        {
+            var storage = Windows.Storage.ApplicationData.Current.LocalSettings;
+            HttpClient client = new HttpClient();
+
+            list.Add("security_ls_key", storage.Values["livestreet_security_key"] as string);
+
+            var content = new FormUrlEncodedContent(list);
+
+            var response = await client.PostAsync(uri, content);
+
+            return await response.Content.ReadAsStringAsync();
+        }
+
         public async Task<string> getAjaxAsync(string uri, List<KeyValuePair<string, string>> list = null)
         {
             var storage = Windows.Storage.ApplicationData.Current.LocalSettings;
