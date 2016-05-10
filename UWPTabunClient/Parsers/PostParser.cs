@@ -37,7 +37,7 @@ namespace UWPTabunClient.Parsers
                 return true;
         }
 
-        public async Task<Comment> refreshComments()
+        public async Task<List<KeyValuePair<int, Comment>>> refreshComments()
         {
             Dictionary<string, string> parameters = new Dictionary<string,string>
             {
@@ -49,23 +49,23 @@ namespace UWPTabunClient.Parsers
             var jsonText = await webManager.getPostAsync(GlobalVariables.linkAjaxResponseComment, parameters);
             var json = JsonConvert.DeserializeObject<JsonResponseComment>(jsonText);
 
-            Comment resultComments = new Comment();
+            List<KeyValuePair<int, Comment>> resultPairs = new List<KeyValuePair<int, Comment>>();
 
             if (json.aComments.Count == 0)
-                return new Comment();
+                return null;
+
+            lastComment = json.iMaxIdComment;
 
             foreach (Dictionary<string, string> dic in json.aComments)
             {
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(dic["html"].ToString());
-                await parseLevel(doc.DocumentNode, resultComments);
+                int idParent = 0;
+                int.TryParse(dic["idParent"], out idParent);
+                resultPairs.Add(new KeyValuePair<int, Comment>(idParent, await parseSingleComment(doc.DocumentNode)));
             }
 
-            //var commentSection = getFirstDescendantWithAttribute(rootNode, "div", "class", "comments");
-
-            //await parseLevel(commentSection, resultComments);
-
-            return resultComments;
+            return resultPairs;
         }
 
         public async Task<Post> getPost()
@@ -137,60 +137,63 @@ namespace UWPTabunClient.Parsers
             return resultComments;
         }
 
+        private async Task<Comment> parseSingleComment(HtmlNode node)
+        {
+            HtmlNode commentSection = getFirstDescendant(node, "section");
+
+            Comment resultComment = new Comment();
+            if (!isAttributeValueContains(commentSection.Attributes, "class", "comment-bad"))
+            {
+                SoftwareBitmapSource source = new SoftwareBitmapSource();
+                await source.SetBitmapAsync(
+                    await webManager.getCachedImageAsync(normalizeImageUriDebug(
+                        commentSection.Descendants("ul")
+                        .Where(x => isAttributeValueEquals(x.Attributes, "class", "comment-info"))
+                        .First()
+                        .Descendants("img")
+                        .Where(x => isAttributeValueEquals(x.Attributes, "class", "comment-avatar"))
+                        .First()
+                        .Attributes["src"]
+                        .Value)));
+
+                resultComment.id = Int32.Parse(commentSection.Attributes["data-id"].Value);
+
+                if (isAttributeValueContains(commentSection.Attributes, "class", "comment-new"))
+                    resultComment.isRead = false;
+
+                resultComment.text = await htmlParser.convertNodeToParagraph(getFirstDescendantWithAttribute(commentSection, "div", "class", "text"));
+
+                resultComment.author = commentSection.Descendants("ul")
+                    .Where(x => isAttributeValueEquals(x.Attributes, "class", "comment-info"))
+                    .First()
+                    .Descendants("li")
+                    .First()
+                    .InnerText
+                    .Trim();
+                resultComment.author_image = source;
+
+                resultComment.datetime = getInnerTextFromFirstDescendant(commentSection, "time");
+
+                resultComment.rating = Int32.Parse(getInnerTextFromFirstDescendantWithAttribute(commentSection, "span", "class", "vote-count"));
+            }
+            else
+            {
+                resultComment.id = Int32.Parse(commentSection.Attributes["data-id"].Value);
+                resultComment.text = await htmlParser.convertNodeToParagraph(getFirstDescendantWithAttribute(commentSection, "div", "class", "text"));
+            }
+
+            return resultComment;
+        }
+
         private async Task<int> parseLevel(HtmlNode node, Comment comm)
         {
             foreach (HtmlNode n in node.ChildNodes
                 .Where(x => x.Name == "div" && isAttributeValueEquals(x.Attributes, "class", "comment-wrapper")))
             {
-                HtmlNode section = n.ChildNodes.Where(x => x.Name == "section").First();
-
-                Comment comment = new Comment();
-                if (!isAttributeValueContains(section.Attributes, "class", "comment-bad"))
-                {
-
-                    SoftwareBitmapSource source = new SoftwareBitmapSource();
-                    await source.SetBitmapAsync(
-                        await webManager.getCachedImageAsync(normalizeImageUriDebug(
-                            section.Descendants("ul")
-                            .Where(x => isAttributeValueEquals(x.Attributes, "class", "comment-info"))
-                            .First()
-                            .Descendants("img")
-                            .Where(x => isAttributeValueEquals(x.Attributes, "class", "comment-avatar"))
-                            .First()
-                            .Attributes["src"]
-                            .Value)));
-
-                    comment.id = Int32.Parse(section.Attributes["data-id"].Value);
-
-                    if (isAttributeValueContains(section.Attributes, "class", "comment-new"))
-                        comment.isRead = false;
-
-                    comment.text = await htmlParser.convertNodeToParagraph(getFirstDescendantWithAttribute(section, "div", "class", "text"));
-
-                    comment.author = section.Descendants("ul")
-                        .Where(x => isAttributeValueEquals(x.Attributes, "class", "comment-info"))
-                        .First()
-                        .Descendants("li")
-                        .First()
-                        .InnerText
-                        .Trim();
-                    comment.author_image = source;
-
-                    comment.datetime = getInnerTextFromFirstDescendant(section, "time");
-
-                    comment.rating = Int32.Parse(getInnerTextFromFirstDescendantWithAttribute(section, "span", "class", "vote-count"));
-
-                    comment.parentNode = comm;
-
-                    comm.childNodes.Add(comment);
-                } else
-                {
-                    comment.id = Int32.Parse(section.Attributes["data-id"].Value);
-                    comment.text = await htmlParser.convertNodeToParagraph(getFirstDescendantWithAttribute(section, "div", "class", "text"));
+                var comment = await parseSingleComment(n);
 
                     comment.parentNode = comm;
                     comm.childNodes.Add(comment);
-                }
 
                 if (n.HasChildNodes)
                     await parseLevel(n, comment);

@@ -121,7 +121,22 @@ namespace UWPTabunClient.Pages
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            await parser.refreshComments();
+            var dic = await parser.refreshComments();
+            if (dic != null)
+            {
+                foreach (KeyValuePair<int, Comment> comment in dic)
+                {
+                    comment.Value.parentNode = comments.FindLast(x => x.id == comment.Key);
+                    if (comment.Key != 0)
+                    {
+                        CommentsBlock.Items.Insert(comments.FindLastIndex(x => x.id == comment.Key) + 1, comment.Value);
+                    }
+                    else
+                    {
+                        CommentsBlock.Items.Add(comment.Value);
+                    }
+                }
+            }
         }
     }
 }
