@@ -11,6 +11,7 @@ using System.Diagnostics;
 using Windows.Graphics.Imaging;
 using Newtonsoft.Json;
 using UWPTabunClient.Models;
+using Windows.Web.Http.Filters;
 
 namespace UWPTabunClient.Managers
 {

@@ -8,14 +8,20 @@ namespace UWPTabunClient.Managers
 {
     class GlobalVariables
     {
-        public static string linkRoot = "https://tabun.everypony.ru";
-        public static string linkBlog = "https://tabun.everypony.ru/blog/";
-        public static string linkMainpage = "https://tabun.everypony.ru/index/";
-        public static string linkProfile = "https://tabun.everypony.ru/profile/";
+        public static string domain = "192.168.1.106";
+        public static string protocol = "https://";
 
-        public static string linkAjaxStreamComments = "https://tabun.everypony.ru/ajax/stream/comment/";
-        public static string linkAjaxStreamTopics = "https://tabun.everypony.ru/ajax/stream/topic/";
-        public static string linkAjaxAddComment = "https://tabun.everypony.ru/blog/ajaxaddcomment/";
-        public static string linkAjaxResponseComment = "https://tabun.everypony.ru/blog/ajaxresponsecomment/";
+        public static string linkRoot = protocol + domain;
+        public static string linkBlog = protocol + domain + "/blog/";
+        public static string linkMainpage = protocol + domain + "/index/";
+        public static string linkProfile = protocol + domain + "/profile/";
+
+        public static string linkAjaxStreamComments = protocol + domain + "/ajax/stream/comment/";
+        public static string linkAjaxStreamTopics = protocol + domain + "/ajax/stream/topic/";
+        public static string linkAjaxAddComment = protocol + domain + "/blog/ajaxaddcomment/";
+        public static string linkAjaxResponseComment = protocol + domain + "/blog/ajaxresponsecomment/";
+        public static string linkAjaxLogin = protocol + domain + "/login/ajax-login?login=";
+
+        public static string linkLogin = protocol + domain + "/login/";
     }
 }
