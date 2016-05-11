@@ -129,6 +129,10 @@ namespace UWPTabunClient.Pages
                     comment.Value.parentNode = comments.FindLast(x => x.id == comment.Key);
                     if (comment.Key != 0)
                     {
+                        if (comment.Value.parentNode.childNodes.Count != 0)
+                        {
+                            CommentsBlock.Items.Insert(comments.FindLastIndex(x => x.id == comment.Value.parentNode.childNodes.Last().id) + 1, comment.Value);
+                        }
                         CommentsBlock.Items.Insert(comments.FindLastIndex(x => x.id == comment.Key) + 1, comment.Value);
                     }
                     else
