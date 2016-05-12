@@ -128,10 +128,10 @@ namespace UWPTabunClient.Pages
 
         private async Task<bool> refreshComments()
         {
-            var dic = await parser.refreshComments();
-            if (dic != null)
+            var newComments = await parser.refreshComments();
+            if (newComments != null)
             {
-                foreach (KeyValuePair<int, Comment> comment in dic)
+                foreach (KeyValuePair<int, Comment> comment in newComments)
                 {
                     comment.Value.parentNode = comments.FindLast(x => x.id == comment.Key);
                     if (comment.Key != 0)
@@ -140,10 +140,12 @@ namespace UWPTabunClient.Pages
                         {
                             CommentsBlock.Items.Insert(comments.FindLastIndex(x => x.id == comment.Value.parentNode.childNodes.Last().id) + 1, comment.Value);
                         }
+                        comments.Insert(comments.FindLastIndex(x => x.id == comment.Key) + 1, comment.Value);
                         CommentsBlock.Items.Insert(comments.FindLastIndex(x => x.id == comment.Key) + 1, comment.Value);
                     }
                     else
                     {
+                        comments.Add(comment.Value);
                         CommentsBlock.Items.Add(comment.Value);
                     }
                 }
