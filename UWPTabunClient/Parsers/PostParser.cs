@@ -30,7 +30,7 @@ namespace UWPTabunClient.Parsers
         public async Task<bool> loadPage(string name)
         {
             int.TryParse(name, out postId);
-            rootNode = await getRootNodeOfPage("http://tabun.everypony.ru/" + name + ".html"); // TODO: Разобраться, какого чёрта тут не взлетает HTTPS
+            rootNode = await getRootNodeOfPage(GlobalVariables.linkRoot + name + ".html"); // TODO: Разобраться, какого чёрта тут не взлетает HTTPS
             if (rootNode == null)
                 return false;
             else

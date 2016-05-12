@@ -11,7 +11,7 @@ namespace UWPTabunClient.Managers
         public static string domain = "192.168.1.106";
         public static string protocol = "https://";
 
-        public static string linkRoot = protocol + domain;
+        public static string linkRoot = protocol + domain + "/";
         public static string linkBlog = protocol + domain + "/blog/";
         public static string linkMainpage = protocol + domain + "/index/";
         public static string linkProfile = protocol + domain + "/profile/";
