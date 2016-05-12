@@ -29,15 +29,19 @@ namespace UWPTabunClient.Managers
             return await webManager.getAjaxAsync(GlobalVariables.linkAjaxStreamTopics);
         }
 
-        public async Task<string> addComment(int post_id, int reply, string text, bool isPost = true)
+        public async Task<bool> addComment(int post_id, int reply, string text, bool isPost = true)
         {
             string uri = GlobalVariables.linkAjaxAddComment;
-            List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
-            list.Add(new KeyValuePair<string, string>("comment_text", text));
-            list.Add(new KeyValuePair<string, string>("reply", reply.ToString()));
-            list.Add(new KeyValuePair<string, string>("cmt_target_id", post_id.ToString()));
+            Dictionary<string, string> parameters = new Dictionary<string, string>
+            {
+                { "comment_text", text },
+                { "reply", reply.ToString() },
+                { "cmt_target_id", post_id.ToString() },
+            };
 
-            return await webManager.getAjaxAsync(uri, list);
+            var json = await webManager.getPostAsync(uri, parameters);
+            var parsedjson = JsonConvert.DeserializeObject<JsonResponse>(json);
+            return !parsedjson.bStateError;
         }
     }
 }

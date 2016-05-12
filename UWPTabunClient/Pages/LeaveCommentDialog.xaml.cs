@@ -44,7 +44,7 @@ namespace UWPTabunClient.Pages
             Debug.WriteLine(text);
             if (text != "")
             {
-                string response = await api.addComment(post_id, reply, text);
+                var response = await api.addComment(post_id, reply, text);
             }
         }
 

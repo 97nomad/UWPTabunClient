@@ -17,6 +17,7 @@ using UWPTabunClient.Models;
 using UWPTabunClient.Pages;
 using UWPTabunClient.Parsers;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -117,9 +118,15 @@ namespace UWPTabunClient.Pages
         {
             LeaveCommentDialog dialog = new LeaveCommentDialog(parser.postId, int.Parse((sender as Button).Tag.ToString()));
             await dialog.ShowAsync();
+            await refreshComments();
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            await refreshComments();
+        }
+
+        private async Task<bool> refreshComments()
         {
             var dic = await parser.refreshComments();
             if (dic != null)
@@ -141,6 +148,7 @@ namespace UWPTabunClient.Pages
                     }
                 }
             }
+            return true;
         }
     }
 }
