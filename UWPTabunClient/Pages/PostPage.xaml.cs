@@ -133,15 +133,20 @@ namespace UWPTabunClient.Pages
             {
                 foreach (KeyValuePair<int, Comment> comment in newComments)
                 {
-                    comment.Value.parentNode = comments.FindLast(x => x.id == comment.Key);
+                    var parentComment = comments.FindLast(x => x.id == comment.Key);
+                    comment.Value.parentNode = parentComment;
+                    parentComment.childNodes.Add(comment.Value);
                     if (comment.Key != 0)
                     {
+                        int insertId;
+
                         if (comment.Value.parentNode.childNodes.Count != 0)
-                        {
-                            CommentsBlock.Items.Insert(comments.FindLastIndex(x => x.id == comment.Value.parentNode.childNodes.Last().id) + 1, comment.Value);
-                        }
-                        comments.Insert(comments.FindLastIndex(x => x.id == comment.Key) + 1, comment.Value);
-                        CommentsBlock.Items.Insert(comments.FindLastIndex(x => x.id == comment.Key) + 1, comment.Value);
+                            insertId = comments.FindLastIndex(x => x.id == comment.Value.parentNode.childNodes.Last().id) + 1;
+                        else
+                            insertId = comments.FindLastIndex(x => x.id == comment.Key) + 1;
+
+                        comments.Insert(insertId, comment.Value);
+                        CommentsBlock.Items.Insert(insertId, comment.Value);
                     }
                     else
                     {
