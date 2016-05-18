@@ -8,7 +8,11 @@ namespace UWPTabunClient.Managers
 {
     class GlobalVariables
     {
+#if (LOCALMIRROR)
         public static string domain = "192.168.1.106";
+#else
+        public static string domain = "tabun.everypony.ru";
+#endif
         public static string protocol = "https://";
 
         public static string linkRoot = protocol + domain + "/";
