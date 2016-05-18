@@ -96,40 +96,55 @@
                     </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="data:Comment">
-                            <StackPanel Orientation="Vertical" 
-                                    HorizontalAlignment="Stretch"
-                                    Margin="{x:Bind deep}"
-                                    Background="{x:Bind backgroundColor}">
+                            <Grid HorizontalAlignment="Stretch"
+                                  Margin="{x:Bind deep}"
+                                  Background="{x:Bind backgroundColor}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
                                 <RichTextBlock DataContext="{x:Bind text}"
                                                Style="{StaticResource StandartHtmlView}"
-                                               Loaded="RichTextBlock_Loaded"/>
-                                <RelativePanel HorizontalAlignment="Stretch"
-                                           Margin="0,0,20,0">
-                                    <Button Name="CommentAuthorButton"
-                                        RelativePanel.AlignLeftWithPanel="True"
+                                               Loaded="RichTextBlock_Loaded"
+                                               Grid.ColumnSpan="3"
+                                               Grid.Row="0"/>
+
+                                <Button Name="CommentAuthorButton"
                                         Tag="{x:Bind author}"
                                         Click="CommentAuthorButton_Click"
-                                        Style="{StaticResource InvisibleButton}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Image Source="{x:Bind author_image}"
+                                        Style="{StaticResource InvisibleButton}"
+                                        Grid.Row="1"
+                                        Grid.Column="0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{x:Bind author_image}"
                                                x:Name="imageContorl"/>
-                                            <TextBlock Text="{x:Bind author}"/>
-                                        </StackPanel>
-                                    </Button>
-                                    <Button Name="LeaveCommentButton"
-                                            RelativePanel.RightOf="CommentAuthorButton"
-                                            Content="Ответить"
-                                            Style="{StaticResource InvisibleButton}"
-                                            Click="LeaveCommentButton_Click"
-                                            Margin="20,0,0,0"
-                                            Tag="{x:Bind id}"/>
+                                        <TextBlock Text="{x:Bind author}"/>
+                                    </StackPanel>
+                                </Button>
 
-                                    <TextBlock Text="{x:Bind rating}"
-                                           RelativePanel.AlignRightWithPanel="True"
+                                <Button Name="LeaveCommentButton"
+                                        Content="Ответить"
+                                        Style="{StaticResource InvisibleButton}"
+                                        Click="LeaveCommentButton_Click"
+                                        Margin="20,0,0,0"
+                                        Tag="{x:Bind id}"
+                                        Grid.Row="1"
+                                        Grid.Column="1"/>
+
+                                <TextBlock Text="{x:Bind rating}"
                                            Foreground="{x:Bind ratingColor}"
-                                           FontWeight="Bold"/>
-                                </RelativePanel>
-                            </StackPanel>
+                                           FontWeight="Bold"
+                                           HorizontalAlignment="Right"
+                                           Margin="0,0,10,0"
+                                           Grid.Row="1"
+                                           Grid.Column="2"/>
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
