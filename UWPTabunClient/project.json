@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "HtmlAgilityPack": "1.4.9",
+    "HtmlAgilityPack.NetCore": "1.4.9.2",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
     "Newtonsoft.Json": "8.0.4-beta1"
   },
