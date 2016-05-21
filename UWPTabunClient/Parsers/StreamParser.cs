@@ -40,18 +40,18 @@ namespace UWPTabunClient.Parsers
 
             List<StreamElement> resultList = new List<StreamElement>();
 
-            var streamNode = getFirstDescendantWithAttribute(rootNode, "ul", "class", "latest-list");
-            var streamElements = getArrayDescendants(streamNode, "li");
+            var streamNode = rootNode.SelectSingleNode(".//ul[@class='latest-list']");
+            var streamElements = streamNode.SelectNodes("./li");
 
             foreach (HtmlNode node in streamElements)
             {
-                var nodeAuthor = getInnerTextFromFirstDescendantWithAttribute(node, "a", "class", "author");
-                var nodeBlog = getInnerTextFromFirstDescendantWithAttribute(node, "a", "class", "stream-blog");
-                var nodeTopic = getInnerTextFromFirstDescendantWithAttribute(node, "a", "class", "stream-topic");
+                var nodeAuthor = node.SelectSingleNode(".//a[@class='author']").InnerText;
+                var nodeBlog = node.SelectSingleNode(".//a[@class='stream-blog']").InnerText;
+                var nodeTopic = node.SelectSingleNode(".//a[@class='stream-topic']").InnerText;
                 nodeTopic = HtmlEntity.DeEntitize(nodeTopic);
-                var nodeCommentsCount = int.Parse(getInnerTextFromFirstDescendantWithAttribute(node, "span", "class", "block-item-comments"));
+                var nodeCommentsCount = int.Parse(node.SelectSingleNode(".//span[@class='block-item-comments']").InnerText);
 
-                var nodeLink = getFirstDescendantWithAttribute(node, "a", "class", "stream-topic").Attributes["href"].Value;
+                var nodeLink = node.SelectSingleNode(".//a[@class='stream-topic']").Attributes["href"].Value;
                 var nodeUri = new Uri(nodeLink);
 
 
