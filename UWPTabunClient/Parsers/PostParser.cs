@@ -91,7 +91,7 @@ namespace UWPTabunClient.Parsers
                         article.SelectSingleNode(".//img[@class='avatar']")
                         .Attributes["src"].Value)));
 
-            var blogNode = article.SelectSingleNode(".//*[@class='topic-blog']");
+            var blogNode = article.SelectSingleNode(".//a[@class='topic-blog'] | .//a[@class='topic-blog private-blog']");
 
             resultPost.blog = blogNode.InnerText;
 
