@@ -34,8 +34,8 @@ namespace UWPTabunClient.Parsers
 
         public string getBlogName()
         {
-            var blog_top = getFirstDescendantWithAttribute(rootNode, "div", "class", "blog-top");
-            return getInnerTextFromFirstDescendantWithAttribute(blog_top, "h2", "class", "page-header");
+            var blog_top = rootNode.SelectSingleNode(".//div[@class='blog-top']");
+            return blog_top.SelectSingleNode(".//h2[@class='page-header']").InnerText;
         }
 
         public async Task<List<Post>> getPosts()
@@ -47,64 +47,51 @@ namespace UWPTabunClient.Parsers
                 return null;
             }
 
-            var articles = getArrayDescendants(rootNode, "article");
+            var articles = rootNode.SelectNodes(".//article");
 
             foreach (HtmlNode article in articles)
             {
-                var articleHeader = getFirstDescendant(article, "header");
+                var articleHeader = article.SelectSingleNode(".//header");
 
-                var articleTitle = articleHeader
-                    .Descendants("h1").First()
-                    .Descendants("a").First()
+                var articleTitle = articleHeader.SelectSingleNode(".//h1/a")
                     .InnerText;
 
-                var articleUri = new Uri(articleHeader
-                    .Descendants("h1").First()
-                    .Descendants("a").First()
+                var articleUri = new Uri(articleHeader.SelectSingleNode(".//h1/a")
                     .Attributes["href"].Value);
 
                 var articleId = Int32.Parse(articleUri
                     .Segments.Last()
                     .Replace(".html", String.Empty));
 
-                var articleRating = articleHeader
-                    .Descendants("span").First()
-                    .Descendants("i").First()
+                var articleRating = articleHeader.SelectSingleNode(".//span/i").InnerText;
+
+                var articleAuthor = articleHeader.SelectSingleNode(".//a[@rel]")
                     .InnerText;
 
-                var articleAuthor = articleHeader
-                    .Descendants("a").Where(x => x.Attributes.Contains("rel")).First()
-                    .InnerText;
-
-                var articleAuthorImageUri = getFirstDescendant(articleHeader, "img")
+                var articleAuthorImageUri = articleHeader.SelectSingleNode(".//img")
                     .Attributes["src"].Value;
 
-                var articleBlog = articleHeader
-                    .Descendants("a").Where(x => x.Attributes.Contains("class")).First()
+                var articleBlog = articleHeader.SelectSingleNode(".//a[@class]")
                     .InnerText;
 
-                var articleBlogId = article
-                    .Descendants().Where(x => isAttributeValueContains(x.Attributes, "class", "topic-blog"))
-                    .First().Attributes["href"].Value;
+                var articleBlogId = article.SelectSingleNode(".//*[@class='topic-blog']")
+                    .Attributes["href"].Value;
 
                 articleBlogId = UriParser.getLastPart(articleBlogId);
 
                 var articleBody = await htmlParser.convertNodeToParagraph(
-                    getFirstDescendantWithAttribute(article, "div", "class", "topic-content text"));
+                    article.SelectSingleNode(".//div[@class='topic-content text']"));
 
-                var articleFooter = getFirstDescendantWithAttribute(article, "footer", "class", "topic-footer");
+                var articleFooter = article.SelectSingleNode(".//footer[@class='topic-footer']");
 
-                var articleTags_tmp = articleFooter
-                    .Descendants("a").Where(x => x.Attributes.Contains("rel")).ToArray();
+                var articleTags_tmp = articleFooter.SelectNodes(".//a[@rel]");
                 string articleTags = "";
                 foreach (HtmlNode node in articleTags_tmp)
                 {
                     articleTags += node.InnerText + " ";
                 }
 
-                //var articleDatatime = getFirstDescendant(articleFooter, "time")
-                //    .Attributes["datetime"].Value;
-                var articleDatatime = getInnerTextFromFirstDescendant(articleFooter, "time");
+                var articleDatatime = articleFooter.SelectSingleNode(".//time").InnerText;
 
                 SoftwareBitmapSource source = new SoftwareBitmapSource();
                 await source.SetBitmapAsync(
