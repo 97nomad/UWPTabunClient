@@ -213,8 +213,8 @@ namespace UWPTabunClient.Parsers
 
         private async Task<Inline> pSpoiler(HtmlNode node)
         {
-            HtmlNode title = getFirstDescendantWithAttribute(node, "span", "class", "spoiler-title");
-            HtmlNode body = getFirstDescendantWithAttribute(node, "span", "class", "spoiler-body");
+            HtmlNode title = node.SelectSingleNode(".//span[@class='spoiler-title']");
+            HtmlNode body = node.SelectSingleNode(".//span[@class='spoiler-body']");
 
             InlineUIContainer container = new InlineUIContainer();
             StackPanel containerPanel = new StackPanel();
@@ -276,7 +276,7 @@ namespace UWPTabunClient.Parsers
             container.Child = panel;
 
             int i = 1;
-            foreach (HtmlNode n in getArrayDescendants(node, "li"))
+            foreach (HtmlNode n in node.SelectNodes(".//li"))
             {
                 RichTextBlock block = new RichTextBlock();
                 block.IsTextSelectionEnabled = false;
