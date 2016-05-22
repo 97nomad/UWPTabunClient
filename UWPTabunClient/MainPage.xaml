@@ -22,6 +22,12 @@
                            Text=""
                            FontSize="28"/>
             </Button>
+            <Button RelativePanel.AlignRightWithPanel="True"
+                    Margin="0,0,20,0"
+                    Name="CommentRefreshButton"
+                    Content="Refresh"
+                    Visibility="Collapsed"
+                    Click="CommentRefreshButton_Click"/>
         </RelativePanel>
     <SplitView Name="MainMenu" DisplayMode="Inline" Grid.Row="1">
             <SplitView.Pane>

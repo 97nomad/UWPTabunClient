@@ -23,9 +23,6 @@ using System.Threading.Tasks;
 
 namespace UWPTabunClient.Pages
 {
-    /// <summary>
-    /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
-    /// </summary>
     public sealed partial class PostPage : Page
     {
         Post post;
@@ -126,7 +123,7 @@ namespace UWPTabunClient.Pages
             await refreshComments();
         }
 
-        private async Task<bool> refreshComments()
+        public async Task<bool> refreshComments()
         {
             var newComments = await parser.refreshComments();
             if (newComments != null)

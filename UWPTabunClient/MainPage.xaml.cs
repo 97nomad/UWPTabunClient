@@ -35,11 +35,26 @@ namespace UWPTabunClient
 
             MainFrame.Navigate(typeof(MainpagePage));
             ProfileFrame.Navigate(typeof(MyProfilePage));
+
+            MainFrame.Navigated += MainFrame_Navigated;
+        }
+
+        private void MainFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            PostPage page = MainFrame.Content as PostPage;
+            if (page == null)
+            {
+                CommentRefreshButton.Visibility = Visibility.Collapsed;
+            } else
+            {
+                CommentRefreshButton.Visibility = Visibility.Visible;
+            }
         }
 
         private void PanelButton_Click(object sender, RoutedEventArgs e)
         {
             MainMenu.IsPaneOpen = !MainMenu.IsPaneOpen;
+            PostPage post = MainFrame.Content as PostPage;
         }
 
         private void PaneList_ItemClick(object sender, ItemClickEventArgs e)
@@ -59,6 +74,14 @@ namespace UWPTabunClient
                 e.Handled = true;
                 MainFrame.GoBack();
             }
+        }
+
+        private async void CommentRefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            PostPage page = MainFrame.Content as PostPage;
+            CommentRefreshButton.IsEnabled = false;
+            await page.refreshComments();
+            CommentRefreshButton.IsEnabled = true;
         }
     }
 }
