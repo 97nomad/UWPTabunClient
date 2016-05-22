@@ -43,8 +43,8 @@ namespace UWPTabunClient.Parsers
             var profileNickname = profile.SelectSingleNode(".//h2").InnerText;
             var profileName = profile.SelectSingleNode(".//p").InnerText;
 
-            var profileForce = profile.SelectSingleNode(".//div[@class='count']").InnerText;
-            var profileRating = profile.SelectSingleNode(".//div[@class='vote-item vote-count']").InnerText;
+            var profileForce = profile.SelectSingleNode(".//div[@class='count']").InnerText.Trim();
+            var profileRating = profile.SelectSingleNode(".//div[@class='vote-item vote-count']").InnerText.Trim();
 
             var profileVotes = profile.SelectSingleNode(".//div[@class='vote-label']").InnerText;
 
