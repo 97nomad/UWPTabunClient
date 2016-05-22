@@ -114,10 +114,11 @@ namespace UWPTabunClient.Parsers
 
             resultPost.commentsCount = rootNode.SelectSingleNode(".//span[@id='count-comments']").InnerText;
 
-            lastComment = int.Parse(
-                rootNode.SelectSingleNode(".//div[@id='new_comments_counter']")
-                .Attributes["data-id-comment-last"].Value);
-            resultPost.lastComment = lastComment;
+            var new_comments_counter = rootNode.SelectSingleNode(".//div[@id='new_comments_counter']");
+            if (new_comments_counter != null) {
+                int.TryParse(new_comments_counter.Attributes["data-id-comment-last"].Value, out lastComment);
+                resultPost.lastComment = lastComment;
+            }
 
             return resultPost;
         }
