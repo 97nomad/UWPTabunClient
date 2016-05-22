@@ -44,7 +44,6 @@ namespace UWPTabunClient.Pages
         {
             base.OnNavigatedTo(e);
 
-#if(!LOCALMIRROR)
             if (await parser.loadPage())
             {
                 if (parser.isUserLoggedIn())
@@ -56,9 +55,6 @@ namespace UWPTabunClient.Pages
                     VotesBlock.Text = parser.getRating();
                 }
             }
-#else
-            isLoggedIn = true;
-#endif
 
             if (isLoggedIn)
                     LoginPanel.Visibility = Visibility.Visible;
