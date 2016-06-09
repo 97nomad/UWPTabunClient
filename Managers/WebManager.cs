@@ -30,12 +30,32 @@ namespace UWPTabunClient.Managers
             cache = new CacheManager();
         }
 
+        public async Task<bool> refreshLSKandSID()
+        {
+            var storage = Windows.Storage.ApplicationData.Current.LocalSettings;
+            if (storage.Values["livestreet_security_key"] != null || storage.Values["sessionId"] != null)
+                return false;
+
+            var page = getPageAsync(GlobalVariables.linkLogin);
+
+            foreach (string line in (await page).Split('\n'))   // Не совсем уверен в таком способе поиска
+            {
+                if (line.Contains("LIVESTREET_SECURITY_KEY"))
+                     storage.Values["livestreet_security_key"] = line.Split('\'')[1];
+                if (line.Contains("SESSION_ID"))
+                    storage.Values["sessionId"] = line.Split('\'')[1];
+            }
+
+            return true;
+        }
+
         public async Task<string> getPostAsync(string uri, Dictionary<string, string> list = null)
         {
             var storage = Windows.Storage.ApplicationData.Current.LocalSettings;
             HttpClient client = new HttpClient();
 
             if (list == null) list = new Dictionary<string, string>();
+            await refreshLSKandSID();
             list.Add("security_ls_key", storage.Values["livestreet_security_key"] as string);
 
             var content = new FormUrlEncodedContent(list);
