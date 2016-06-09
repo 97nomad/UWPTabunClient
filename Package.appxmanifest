@@ -26,12 +26,4 @@
     <Capability Name="internetClient" />
     <Capability Name="privateNetworkClientServer" />
   </Capabilities>
-  <Extensions>
-    <Extension Category="windows.certificates">
-      <Certificates>
-        <Certificate StoreName="Root" Content="192.168.1.106.crt" />
-        <SelectionCriteria AutoSelect="true" />
-      </Certificates>
-    </Extension>
-  </Extensions>
 </Package>

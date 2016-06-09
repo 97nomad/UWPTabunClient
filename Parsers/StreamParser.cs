@@ -23,9 +23,9 @@ namespace UWPTabunClient.Parsers
             HtmlDocument doc = new HtmlDocument();
 
             if (isComment)
-                doc.LoadHtml(await api.getStreamComments());
+                doc.LoadHtml((await api.getStreamComments()).sText);
             else
-                doc.LoadHtml(await api.getStreamTopics());
+                doc.LoadHtml((await api.getStreamTopics()).sText);
             rootNode = doc.DocumentNode;
 
             if (rootNode == null)

@@ -35,6 +35,7 @@ namespace UWPTabunClient.Managers
             var storage = Windows.Storage.ApplicationData.Current.LocalSettings;
             HttpClient client = new HttpClient();
 
+            if (list == null) list = new Dictionary<string, string>();
             list.Add("security_ls_key", storage.Values["livestreet_security_key"] as string);
 
             var content = new FormUrlEncodedContent(list);

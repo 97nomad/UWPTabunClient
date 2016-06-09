@@ -19,14 +19,18 @@ namespace UWPTabunClient.Managers
             webManager = WebManager.Instance;
         }
 
-        public async Task<string> getStreamComments()
+        public async Task<JsonResponse> getStreamComments()
         {
-            return await webManager.getAjaxAsync(GlobalVariables.linkAjaxStreamComments);
+            var response = await webManager.getPostAsync(GlobalVariables.linkAjaxStreamComments);
+            var json = JsonConvert.DeserializeObject<JsonResponse>(response);
+            return json;
         }
 
-        public async Task<string> getStreamTopics()
+        public async Task<JsonResponse> getStreamTopics()
         {
-            return await webManager.getAjaxAsync(GlobalVariables.linkAjaxStreamTopics);
+            var response = await webManager.getPostAsync(GlobalVariables.linkAjaxStreamTopics);
+            var json = JsonConvert.DeserializeObject<JsonResponse>(response);
+            return json;
         }
 
         public async Task<bool> addComment(int post_id, int reply, string text, bool isPost = true)
