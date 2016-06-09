@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
 using Windows.UI;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
@@ -97,6 +98,11 @@ namespace UWPTabunClient.Models
                 c = c.parentNode;
             }
             return i;
+        }
+
+        public async void setBitmapSource(Task<SoftwareBitmap> image)
+        {
+            author_image.SetBitmapAsync(await image);
         }
     }
 

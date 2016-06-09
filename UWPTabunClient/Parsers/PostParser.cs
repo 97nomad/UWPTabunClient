@@ -145,8 +145,7 @@ namespace UWPTabunClient.Parsers
             if (!isAttributeValueContains(commentSection.Attributes, "class", "comment-bad"))
             {
                 SoftwareBitmapSource source = new SoftwareBitmapSource();
-                await source.SetBitmapAsync(
-                    await webManager.getCachedImageAsync(normalizeImageUriDebug(
+                resultComment.setBitmapSource(webManager.getCachedImageAsync(normalizeImageUriDebug(
                         commentSection.SelectSingleNode(".//ul[@class='comment-info']")
                         .SelectSingleNode(".//img[@class='comment-avatar']")
                         .Attributes["src"].Value)));
@@ -162,7 +161,6 @@ namespace UWPTabunClient.Parsers
                     .SelectSingleNode("./li")
                     .InnerText
                     .Trim();
-                resultComment.author_image = source;
 
                 resultComment.datetime = commentSection.SelectSingleNode(".//time").InnerText;
 
