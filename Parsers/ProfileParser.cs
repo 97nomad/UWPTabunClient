@@ -115,11 +115,14 @@ namespace UWPTabunClient.Parsers
 
             var profileContactLists = profileRight.SelectNodes(".//ul[@class='profile-contact-list']");
             List<string> profileContacts = new List<string>();
-            foreach (HtmlNode list in profileContactLists)
+            if (profileContactLists != null)
             {
-                foreach (HtmlNode node in list.SelectNodes(".//a"))
+                foreach (HtmlNode list in profileContactLists)
                 {
-                    profileContacts.Add(node.InnerText);
+                    foreach (HtmlNode node in list.SelectNodes(".//a"))
+                    {
+                        profileContacts.Add(node.InnerText);
+                    }
                 }
             }
 
