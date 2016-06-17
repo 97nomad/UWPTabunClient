@@ -133,6 +133,7 @@ namespace UWPTabunClient.Parsers
             var commentSection = rootNode.SelectSingleNode(".//div[@class='comments']");
 
             await parseLevel(commentSection, resultComments);
+            webManager.clearCache();    // Маленький аккуратный костыльчик
 
             return resultComments;
         }

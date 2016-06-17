@@ -172,6 +172,11 @@ namespace UWPTabunClient.Managers
 
         }
 
+        public void clearCache()
+        {
+            imagePool.Clear();
+        }
+
         public static KeyValuePair<string, string> convertPathFilenameFromUri(string url)
         {
             Uri uri = new Uri(url);
