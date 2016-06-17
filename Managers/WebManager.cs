@@ -131,17 +131,17 @@ namespace UWPTabunClient.Managers
             // Преобразуем строку в Uri
             KeyValuePair<string, string> uri = convertPathFilenameFromUri(url);
 
+            SoftwareBitmap bitmap = null;
+
             // Проверка на существование файла на диске
             if (await cache.isFileActual(url))
             {
-                SoftwareBitmap bitmap = await cache.readImageFile(url);
+                bitmap = await cache.readImageFile(url);
 
                 return bitmap;
             } else
             {
                 // Загрузка файла на диск
-                SoftwareBitmap bitmap = null;
-
                 try
                 {
                     using (HttpClient client = new HttpClient())
@@ -159,13 +159,13 @@ namespace UWPTabunClient.Managers
                 {
                     Debug.WriteLine("Ошибка при загрузке изображения: " + uri);
                 }
+            }
 
-                if (bitmap != null) // Если картинка загрузилась
-                {
-                    await cache.createImageFile(url, bitmap); // Запись загруженного файла на диск
-                    imagePool.Add(new KeyValuePair<string, SoftwareBitmap>(url, bitmap));
-                    return bitmap;
-                }
+            if (bitmap != null) // Если картинка загрузилась
+            {
+                await cache.createImageFile(url, bitmap); // Запись загруженного файла на диск
+                imagePool.Add(new KeyValuePair<string, SoftwareBitmap>(url, bitmap));
+                return bitmap;
             }
 
             return null;
