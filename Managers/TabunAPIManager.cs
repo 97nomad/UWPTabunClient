@@ -10,27 +10,42 @@ using UWPTabunClient.Models;
 
 namespace UWPTabunClient.Managers
 {
-    class TabunAPIManager : WebManager
+    class TabunAPIManager
     {
-        public async Task<string> getStreamComments()
+        private WebManager webManager;
+
+        public TabunAPIManager()
         {
-            return await getAjaxAsync("https://tabun.everypony.ru/ajax/stream/comment/");
+            webManager = WebManager.Instance;
         }
 
-        public async Task<string> getStreamTopics()
+        public async Task<JsonResponse> getStreamComments()
         {
-            return await getAjaxAsync("https://tabun.everypony.ru/ajax/stream/topic/");
+            var response = await webManager.getPostAsync(GlobalVariables.linkAjaxStreamComments);
+            var json = JsonConvert.DeserializeObject<JsonResponse>(response);
+            return json;
         }
 
-        public async Task<string> addComment(int post_id, int reply, string text, bool isPost = true)
+        public async Task<JsonResponse> getStreamTopics()
         {
-            string uri = "https://tabun.everypony.ru/blog/ajaxaddcomment/";
-            List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>();
-            list.Add(new KeyValuePair<string, string>("comment_text", text));
-            list.Add(new KeyValuePair<string, string>("reply", reply.ToString()));
-            list.Add(new KeyValuePair<string, string>("cmt_target_id", post_id.ToString()));
+            var response = await webManager.getPostAsync(GlobalVariables.linkAjaxStreamTopics);
+            var json = JsonConvert.DeserializeObject<JsonResponse>(response);
+            return json;
+        }
 
-            return await getAjaxAsync(uri, list);
+        public async Task<bool> addComment(int post_id, int reply, string text, bool isPost = true)
+        {
+            string uri = GlobalVariables.linkAjaxAddComment;
+            Dictionary<string, string> parameters = new Dictionary<string, string>
+            {
+                { "comment_text", text },
+                { "reply", reply.ToString() },
+                { "cmt_target_id", post_id.ToString() },
+            };
+
+            var json = await webManager.getPostAsync(uri, parameters);
+            var parsedjson = JsonConvert.DeserializeObject<JsonResponse>(json);
+            return !parsedjson.bStateError;
         }
     }
 }
