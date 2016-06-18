@@ -25,9 +25,12 @@
             <Button RelativePanel.AlignRightWithPanel="True"
                     Margin="0,0,20,0"
                     Name="CommentRefreshButton"
-                    Content="Refresh"
                     Visibility="Collapsed"
-                    Click="CommentRefreshButton_Click"/>
+                    Click="CommentRefreshButton_Click">
+                <TextBlock FontFamily="Segoe MDL2 Assets"
+                           Text=""
+                           FontSize="28"/>
+            </Button>
         </RelativePanel>
     <SplitView Name="MainMenu" DisplayMode="Inline" Grid.Row="1">
             <SplitView.Pane>
