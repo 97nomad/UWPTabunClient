@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Graphics.Imaging;
+using UWPTabunClient.Managers;
 
 namespace UWPTabunClient.Parsers
 {
@@ -24,11 +25,7 @@ namespace UWPTabunClient.Parsers
 
         public async Task<bool> loadPage(string page)
         {
-#if (LOCALMIRROR)
-            string addr = "http://" + siteDomain + "/profile/" + page + ".html";
-#else
-            string addr = "http://" + siteDomain + "/profile/" + page + "/";
-#endif
+            string addr = GlobalVariables.linkProfile + page + "/";
             rootNode = await getRootNodeOfPage(addr);
             if (rootNode == null)
                 return false;
@@ -39,31 +36,34 @@ namespace UWPTabunClient.Parsers
 
         public async Task<Profile> getProfile()
         {
-            var profile = getFirstDescendantWithAttribute(rootNode, "div", "class", "profile");
-            var profileLeft = getFirstDescendantWithAttribute(rootNode, "div", "class", "profile-left");
-            var profileRight = getFirstDescendantWithAttribute(rootNode, "div", "class", "profile-right");
+            var profile = rootNode.SelectSingleNode(".//div[@class='profile']");
+            var profileLeft = rootNode.SelectSingleNode(".//div[@class='profile-left']");
+            var profileRight = rootNode.SelectSingleNode(".//div[@class='profile-right']");
                 
-            var profileNickname = getInnerTextFromFirstDescendant(profile, "h2");
-            var profileName = getInnerTextFromFirstDescendant(profile, "p");
+            var profileNickname = profile.SelectSingleNode(".//h2").InnerText;
 
-            var profileForce = getInnerTextFromFirstDescendantWithAttribute(profile, "div", "class", "count");
-            var profileRating = getInnerTextFromFirstDescendantWithAttribute(profile, "div", "class", "vote-item vote-count");
+            var profileNameNode = profile.SelectSingleNode(".//p");
+            var profileName = "";
+            if (profileNameNode != null)
+                profileName = profileNameNode.InnerText;
 
-            var profileVotes = getInnerTextFromFirstDescendantWithAttribute(profile, "div", "class", "vote-label");
+            var profileForce = profile.SelectSingleNode(".//div[@class='count']").InnerText.Trim();
+            var profileRating = profile.SelectSingleNode(".//div[@class='vote-item vote-count']").InnerText.Trim();
+
+            var profileVotes = profile.SelectSingleNode(".//div[@class='vote-label']").InnerText;
 
 
             // Жестокий парсинг голого HTML
             var profileAbout = new Paragraph();
             try {
-                var profileAboutNodes = rootNode
-                    .Descendants("div").Where(x => isAttributeValueEquals(x.Attributes, "class", "profile-info-about")).First()
-                    .Descendants("div").Where(x => isAttributeValueEquals(x.Attributes, "class", "text")).First();
+                var profileAboutNodes = rootNode.SelectSingleNode(".//div[@class='profile-info-about']")
+                    .SelectSingleNode(".//div[@class='text']");
                 profileAbout = await htmlParser.convertNodeToParagraph(profileAboutNodes);
             } catch (Exception)
             {
             }
 
-            var profileDotLists = getArrayDescendantsWithAttribute(profileLeft, "ul", "class", "profile-dotted-list");
+            var profileDotLists = profileLeft.SelectNodes(".//ul[@class='profile-dotted-list']");
 
             string profileSex = "";
             string profileDateOfBirdth = "";
@@ -75,10 +75,10 @@ namespace UWPTabunClient.Parsers
             string profileLastVisite = "";
 
             foreach (HtmlNode dottedList in profileDotLists) {
-                var list = getArrayDescendants(dottedList, "li");
+                var list = dottedList.SelectNodes(".//li");
                 foreach (HtmlNode node in list)
                 {
-                    var span = getInnerTextFromFirstDescendant(node, "span");
+                    var span = node.SelectSingleNode(".//span").InnerText;
                     if (span.Contains("Пол:"))
                         profileSex = getInnerTextFromFirstDescendant(node, "strong");
                     if (span.Contains("Дата рождения:"))
@@ -100,11 +100,11 @@ namespace UWPTabunClient.Parsers
 
             var profileBlogConsistIn = await htmlParser.convertNodeToParagraph(profileConsistsIn);
 
-            HtmlNode profileFriendsNode = getFirstDescendantWithAttribute(profileLeft, "ul", "class", "user-list-avatar");
+            HtmlNode profileFriendsNode = profileLeft.SelectSingleNode(".//ul[@class='user-list-avatar']");
             List<Friend> profileFriends = new List<Friend>();
-            foreach (HtmlNode node in getArrayDescendants(profileFriendsNode, "a"))
+            foreach (HtmlNode node in profileFriendsNode.SelectNodes(".//a"))
             {
-                var friendAvatarPath = getFirstDescendant(node, "img")
+                var friendAvatarPath = node.SelectSingleNode(".//img")
                     .Attributes["src"].Value;
                 var friendName = node.InnerText.Trim();
                 SoftwareBitmapSource source = new SoftwareBitmapSource();
@@ -117,13 +117,16 @@ namespace UWPTabunClient.Parsers
                 });
             }
 
-            var profileContactLists = getArrayDescendantsWithAttribute(profileRight, "ul", "class", "profile-contact-list");
+            var profileContactLists = profileRight.SelectNodes(".//ul[@class='profile-contact-list']");
             List<string> profileContacts = new List<string>();
-            foreach (HtmlNode list in profileContactLists)
+            if (profileContactLists != null)
             {
-                foreach (HtmlNode node in getArrayDescendants(list, "a"))
+                foreach (HtmlNode list in profileContactLists)
                 {
-                    profileContacts.Add(node.InnerText);
+                    foreach (HtmlNode node in list.SelectNodes(".//a"))
+                    {
+                        profileContacts.Add(node.InnerText);
+                    }
                 }
             }
 
@@ -131,14 +134,14 @@ namespace UWPTabunClient.Parsers
             await profileBigPhoto.SetBitmapAsync(
                 await webManager.getCachedImageAsync(
                     normalizeImageUriDebug(
-                        getFirstDescendantWithAttribute(rootNode, "img", "class", "profile-photo")
+                        rootNode.SelectSingleNode(".//img[@class='profile-photo']")
                         .Attributes["src"].Value)));
 
             SoftwareBitmapSource profileAvatar_100x100 = new SoftwareBitmapSource();
             await profileAvatar_100x100.SetBitmapAsync(
                 await webManager.getCachedImageAsync(
                     normalizeImageUriDebug(
-                        getFirstDescendantWithAttribute(rootNode, "img", "itemprop", "photo")
+                        rootNode.SelectSingleNode(".//img[@itemprop='photo']")
                         .Attributes["src"].Value)));
 
             Profile resultProfile = new Profile

@@ -9,12 +9,11 @@ namespace UWPTabunClient.Parsers
 {
     class AbstractParser
     {
-        protected const string siteDomain = "tabun.everypony.ru";
         protected WebManager webManager;
 
         public AbstractParser()
         {
-            webManager = new WebManager();
+            webManager = WebManager.Instance;
         }
 
         public async Task<HtmlNode> getRootNodeOfPage(string url)
@@ -26,9 +25,10 @@ namespace UWPTabunClient.Parsers
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(page);
                 return doc.DocumentNode;
-            } catch (Exception)
+            } catch (Exception exc)
             {
                 Debug.WriteLine("Ошибка при загрузке страницы " + url);
+                Debug.WriteLine(exc.Message);
                 return null;
             }
         }
@@ -73,7 +73,7 @@ namespace UWPTabunClient.Parsers
             if (uri.First() == '/')
             {
                 Debug.WriteLine("Кривая ссылка normalizeUri " + uri);
-                return "https://" + siteDomain + uri;
+                return GlobalVariables.linkRoot + uri;
             }
             return uri;
         }

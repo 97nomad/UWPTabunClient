@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Graphics.Imaging;
+using Windows.UI;
 using Windows.UI.Xaml.Documents;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace UWPTabunClient.Models
@@ -16,6 +19,7 @@ namespace UWPTabunClient.Models
         public SoftwareBitmapSource author_image;
         public string datetime;
         public int rating;
+        public bool isRead;
 
         public Comment parentNode;
         public List<Comment> childNodes;
@@ -23,6 +27,14 @@ namespace UWPTabunClient.Models
         public Windows.UI.Xaml.Thickness deep { get
             {
                 return new Windows.UI.Xaml.Thickness(getDeep() * 10, 1, 1, 1);
+            } }
+
+        public Brush backgroundColor { get
+            {
+                if (isRead)
+                    return new SolidColorBrush(Colors.Silver);
+                else
+                    return new SolidColorBrush(Colors.SkyBlue);
             } }
 
         public string ratingColor { get
@@ -46,6 +58,7 @@ namespace UWPTabunClient.Models
             author_image = new SoftwareBitmapSource();
             datetime = "";
             rating = 0;
+            isRead = true;
 
             parentNode = null;
             childNodes = new List<Comment>();
@@ -85,6 +98,11 @@ namespace UWPTabunClient.Models
                 c = c.parentNode;
             }
             return i;
+        }
+
+        public async void setBitmapSource(Task<SoftwareBitmap> image)
+        {
+            author_image.SetBitmapAsync(await image);
         }
     }
 

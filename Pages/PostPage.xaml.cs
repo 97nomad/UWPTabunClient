@@ -17,14 +17,12 @@ using UWPTabunClient.Models;
 using UWPTabunClient.Pages;
 using UWPTabunClient.Parsers;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace UWPTabunClient.Pages
 {
-    /// <summary>
-    /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
-    /// </summary>
     public sealed partial class PostPage : Page
     {
         Post post;
@@ -53,6 +51,14 @@ namespace UWPTabunClient.Pages
             CommentsCountBlock.Text = post.commentsCount;
         }
 
+        private void LoadComments()
+        {
+            foreach (Comment c in comments)
+            {
+                CommentsBlock.Items.Add(c);
+            }
+        }
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -66,8 +72,7 @@ namespace UWPTabunClient.Pages
                     post = await parser.getPost();
                     comments = (await parser.getComments()).Descendants();
                     LoadPost();
-
-                    Bindings.Update();
+                    LoadComments();
                 } catch (Exception exp)
                 {
                     Frame.Navigate(typeof(ErrorPage), exp.Message);
@@ -110,6 +115,39 @@ namespace UWPTabunClient.Pages
         {
             LeaveCommentDialog dialog = new LeaveCommentDialog(parser.postId, int.Parse((sender as Button).Tag.ToString()));
             await dialog.ShowAsync();
+            await refreshComments();
+        }
+
+        public async Task<bool> refreshComments()
+        {
+            var newComments = await parser.refreshComments();
+            if (newComments != null)
+            {
+                foreach (KeyValuePair<int, Comment> comment in newComments)
+                {
+                    var parentComment = comments.FindLast(x => x.id == comment.Key);
+                    comment.Value.parentNode = parentComment;
+                    parentComment.childNodes.Add(comment.Value);
+                    if (comment.Key != 0)
+                    {
+                        int insertId;
+
+                        if (comment.Value.parentNode.childNodes.Count != 0)
+                            insertId = comments.FindLastIndex(x => x.id == comment.Value.parentNode.childNodes.Last().id) + 1;
+                        else
+                            insertId = comments.FindLastIndex(x => x.id == comment.Key) + 1;
+
+                        comments.Insert(insertId, comment.Value);
+                        CommentsBlock.Items.Insert(insertId, comment.Value);
+                    }
+                    else
+                    {
+                        comments.Add(comment.Value);
+                        CommentsBlock.Items.Add(comment.Value);
+                    }
+                }
+            }
+            return true;
         }
     }
 }

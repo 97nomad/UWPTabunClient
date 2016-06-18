@@ -47,7 +47,9 @@ namespace UWPTabunClient.Managers
 
             using (var stream = await storageFile.OpenAsync(FileAccessMode.Read))
             {
-                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                if (stream.Size == 0)   // Иногда картинки криво сохраняются и совершенно не собираются читаться
+                    return null;
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);        // Тут этот гад кидает System.Exception при нулевом размере файла
                 SoftwareBitmap resultBitmap = await decoder.GetSoftwareBitmapAsync();
 
                 resultBitmap = SoftwareBitmap.Convert(resultBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);

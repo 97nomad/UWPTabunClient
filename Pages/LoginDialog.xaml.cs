@@ -18,6 +18,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using UWPTabunClient.Models;
 using UWPTabunClient.Parsers;
+using UWPTabunClient.Managers;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -41,10 +42,10 @@ namespace UWPTabunClient.Pages
 
         private async void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            rootNode = await parser.getRootNodeOfPage("http://tabun.everypony.ru/login/");
+            rootNode = await parser.getRootNodeOfPage(GlobalVariables.linkLogin);
             string livestreet_security_key = AbstractParser.getLivestreetSecurityKey(rootNode);
             string sessionId = AbstractParser.getSessionId(rootNode);
-            string authorize_uri = "http://tabun.everypony.ru/login/ajax-login?login="
+            string authorize_uri = GlobalVariables.linkAjaxLogin
                 + Login.Text
                 + "&password="
                 + Password.Password

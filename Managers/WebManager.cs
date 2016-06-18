@@ -11,18 +11,58 @@ using System.Diagnostics;
 using Windows.Graphics.Imaging;
 using Newtonsoft.Json;
 using UWPTabunClient.Models;
+using Windows.Web.Http.Filters;
 
 namespace UWPTabunClient.Managers
 {
-    class WebManager
+    sealed class WebManager
     {
-        private List<KeyValuePair<string, SoftwareBitmap>> imagePool;
-        private CacheManager cache;
+        private static readonly Lazy<WebManager> InstanceField = new Lazy<WebManager>(() => new WebManager());
 
-        public WebManager()
+        public static WebManager Instance { get { return InstanceField.Value; } }
+
+        private List<KeyValuePair<string, SoftwareBitmap>> imagePool;   // Кажется, тут что-то течёт
+        private CacheManager cache;
+        
+        private WebManager()
         {
             imagePool = new List<KeyValuePair<string, SoftwareBitmap>>();
             cache = new CacheManager();
+        }
+
+        public async Task<bool> refreshLSKandSID()
+        {
+            var storage = Windows.Storage.ApplicationData.Current.LocalSettings;
+            if (storage.Values["livestreet_security_key"] != null || storage.Values["sessionId"] != null)
+                return false;
+
+            var page = getPageAsync(GlobalVariables.linkLogin);
+
+            foreach (string line in (await page).Split('\n'))   // Не совсем уверен в таком способе поиска
+            {
+                if (line.Contains("LIVESTREET_SECURITY_KEY"))
+                     storage.Values["livestreet_security_key"] = line.Split('\'')[1];
+                if (line.Contains("SESSION_ID"))
+                    storage.Values["sessionId"] = line.Split('\'')[1];
+            }
+
+            return true;
+        }
+
+        public async Task<string> getPostAsync(string uri, Dictionary<string, string> list = null)
+        {
+            var storage = Windows.Storage.ApplicationData.Current.LocalSettings;
+            HttpClient client = new HttpClient();
+
+            if (list == null) list = new Dictionary<string, string>();
+            await refreshLSKandSID();
+            list.Add("security_ls_key", storage.Values["livestreet_security_key"] as string);
+
+            var content = new FormUrlEncodedContent(list);
+
+            var response = await client.PostAsync(uri, content);
+
+            return await response.Content.ReadAsStringAsync();
         }
 
         public async Task<string> getAjaxAsync(string uri, List<KeyValuePair<string, string>> list = null)
@@ -65,7 +105,7 @@ namespace UWPTabunClient.Managers
 
             var storage = Windows.Storage.ApplicationData.Current.LocalSettings;
             if (storage.Values["sessionId"] != null)
-                cookieContainer.Add(new Uri("http://tabun.everypony.ru"),
+                cookieContainer.Add(new Uri(GlobalVariables.linkRoot),
                     new Cookie("TABUNSESSIONID", (storage.Values["sessionId"] as string)));
 
             using (HttpClient client = new HttpClient(handler))
@@ -91,17 +131,17 @@ namespace UWPTabunClient.Managers
             // Преобразуем строку в Uri
             KeyValuePair<string, string> uri = convertPathFilenameFromUri(url);
 
+            SoftwareBitmap bitmap = null;
+
             // Проверка на существование файла на диске
             if (await cache.isFileActual(url))
             {
-                SoftwareBitmap bitmap = await cache.readImageFile(url);
+                bitmap = await cache.readImageFile(url);
 
                 return bitmap;
             } else
             {
                 // Загрузка файла на диск
-                SoftwareBitmap bitmap = null;
-
                 try
                 {
                     using (HttpClient client = new HttpClient())
@@ -119,17 +159,22 @@ namespace UWPTabunClient.Managers
                 {
                     Debug.WriteLine("Ошибка при загрузке изображения: " + uri);
                 }
+            }
 
-                if (bitmap != null) // Если картинка загрузилась
-                {
-                    await cache.createImageFile(url, bitmap); // Запись загруженного файла на диск
-                    imagePool.Add(new KeyValuePair<string, SoftwareBitmap>(url, bitmap));
-                    return bitmap;
-                }
+            if (bitmap != null) // Если картинка загрузилась
+            {
+                await cache.createImageFile(url, bitmap); // Запись загруженного файла на диск
+                imagePool.Add(new KeyValuePair<string, SoftwareBitmap>(url, bitmap));
+                return bitmap;
             }
 
             return null;
 
+        }
+
+        public void clearCache()
+        {
+            imagePool.Clear();
         }
 
         public static KeyValuePair<string, string> convertPathFilenameFromUri(string url)
