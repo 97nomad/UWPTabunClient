@@ -26,7 +26,7 @@ namespace UWPTabunClient.Pages
     public sealed partial class MyProfilePage : Page
     {
         private MyProfileParser parser;
-        private bool isLoggedIn;
+        public bool isLoggedIn;
 
         private LoginDialog loginDialog;
         private ExitDialog exitDialog;

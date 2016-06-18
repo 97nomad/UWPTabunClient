@@ -45,9 +45,12 @@ namespace UWPTabunClient
             if (page == null)
             {
                 CommentRefreshButton.Visibility = Visibility.Collapsed;
-            } else
+            } else if ((ProfileFrame.Content as MyProfilePage).isLoggedIn)
             {
                 CommentRefreshButton.Visibility = Visibility.Visible;
+            } else
+            {
+                CommentRefreshButton.Visibility = Visibility.Collapsed;
             }
         }
 
