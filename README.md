@@ -1,2 +1,2 @@
 # UWPTabunClient
-Клиент tabun.everypony.ru для платформы UWP.
+Клиент tabun.everypony.ru для UWP.
