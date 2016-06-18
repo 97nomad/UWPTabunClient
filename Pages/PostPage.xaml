@@ -148,10 +148,6 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-
-                <Button Grid.Row="5"
-                        Content="Обновить комментарии"
-                        Click="Button_Click"/>
             </Grid>
         </StackPanel>
     </ScrollViewer>

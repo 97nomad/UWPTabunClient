@@ -118,11 +118,6 @@ namespace UWPTabunClient.Pages
             await refreshComments();
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            await refreshComments();
-        }
-
         public async Task<bool> refreshComments()
         {
             var newComments = await parser.refreshComments();
