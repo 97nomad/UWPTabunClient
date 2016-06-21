@@ -84,7 +84,7 @@ namespace UWPTabunClient.Parsers
                     if (span.Contains("Дата рождения:"))
                         profileDateOfBirdth = getInnerTextFromFirstDescendant(node, "strong");
                     if (span.Contains("Местоположение:"))
-                        profilePlace = getInnerTextFromFirstDescendant(node, "strong");
+                        profilePlace = getInnerTextFromFirstDescendant(node, "strong").Replace("\n", String.Empty).Replace("\t", String.Empty);
                     if (span.Contains("Создал:"))
                         profileCreated = getFirstDescendant(node, "strong");
                     if (span.Contains("Администрирует:"))
