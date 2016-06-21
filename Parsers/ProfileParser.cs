@@ -102,19 +102,25 @@ namespace UWPTabunClient.Parsers
 
             HtmlNode profileFriendsNode = profileLeft.SelectSingleNode(".//ul[@class='user-list-avatar']");
             List<Friend> profileFriends = new List<Friend>();
-            foreach (HtmlNode node in profileFriendsNode.SelectNodes(".//a"))
+            try
             {
-                var friendAvatarPath = node.SelectSingleNode(".//img")
-                    .Attributes["src"].Value;
-                var friendName = node.InnerText.Trim();
-                SoftwareBitmapSource source = new SoftwareBitmapSource();
-                await source.SetBitmapAsync(
-                    await webManager.getCachedImageAsync(normalizeImageUriDebug(friendAvatarPath)));
-                profileFriends.Add(new Friend
+                foreach (HtmlNode node in profileFriendsNode.SelectNodes(".//a"))
                 {
-                    avatar_100x100 = source,
-                    name = friendName,
-                });
+                    var friendAvatarPath = node.SelectSingleNode(".//img")
+                        .Attributes["src"].Value;
+                    var friendName = node.InnerText.Trim();
+                    SoftwareBitmapSource source = new SoftwareBitmapSource();
+                    await source.SetBitmapAsync(
+                        await webManager.getCachedImageAsync(normalizeImageUriDebug(friendAvatarPath)));
+                    profileFriends.Add(new Friend
+                    {
+                        avatar_100x100 = source,
+                        name = friendName,
+                    });
+                }
+            } catch (System.NullReferenceException)
+            {
+
             }
 
             var profileContactLists = profileRight.SelectNodes(".//ul[@class='profile-contact-list']");
