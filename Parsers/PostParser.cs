@@ -105,7 +105,7 @@ namespace UWPTabunClient.Parsers
             resultPost.text = await htmlParser.convertNodeToParagraph(
                 article.SelectSingleNode(".//div[@class='topic-content text']"));
 
-            resultPost.datatime = article.SelectSingleNode(".//time").InnerText;
+            resultPost.datatime = article.SelectSingleNode(".//time").InnerText.Replace("\n", String.Empty).Replace("\t", String.Empty);
 
             foreach (HtmlNode node in article.SelectNodes(".//a[@rel='tag']"))
             {
@@ -167,7 +167,7 @@ namespace UWPTabunClient.Parsers
 
                 resultComment.author_image = source;
 
-                resultComment.datetime = commentSection.SelectSingleNode(".//time").InnerText;
+                resultComment.datetime = commentSection.SelectSingleNode(".//time").InnerText.Replace("\n", String.Empty).Trim();
 
                 resultComment.rating = int.Parse(commentSection.SelectSingleNode(".//span[@class='vote-count']").InnerText);
             }
