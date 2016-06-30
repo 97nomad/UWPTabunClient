@@ -93,6 +93,8 @@ namespace UWPTabunClient.Parsers
 
                 var articleDatatime = articleFooter.SelectSingleNode(".//time").InnerText;
 
+                var articleCommentsCount = articleFooter.SelectSingleNode(".//li[@class='topic-info-comments']").InnerText.Trim();
+
                 SoftwareBitmapSource source = new SoftwareBitmapSource();
                 await source.SetBitmapAsync(
                     await webManager.getCachedImageAsync(normalizeImageUriDebug(articleAuthorImageUri)));
@@ -109,7 +111,8 @@ namespace UWPTabunClient.Parsers
                     text = articleBody,
                     //text = HtmlEntity.DeEntitize(articleBody).Trim(),
                     tags = articleTags,
-                    datatime = articleDatatime
+                    datatime = articleDatatime,
+                    commentsCount = articleCommentsCount,
                 });
             }
 
