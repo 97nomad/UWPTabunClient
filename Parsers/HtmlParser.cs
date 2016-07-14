@@ -192,18 +192,7 @@ namespace UWPTabunClient.Parsers
 
                 hpButton.Click += (s, e) =>
                 {
-                    switch (UriParser.getInnerLinkType(link))
-                    {
-                        case UriParser.PageType.Post:
-                            frame.Navigate(typeof(PostPage), UriParser.getLastPart(link));
-                            break;
-                        case UriParser.PageType.Profile:
-                            frame.Navigate(typeof(ProfilePage), UriParser.getLastPart(link));
-                            break;
-                        case UriParser.PageType.Blog:
-                            frame.Navigate(typeof(BlogPage), UriParser.getLastPart(link));
-                            break;
-                    }
+                    UriParser.GoToPage(link, frame);
                 };
 
                 container.Child = hpButton;

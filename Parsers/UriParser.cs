@@ -77,6 +77,12 @@ namespace UWPTabunClient.Parsers
             }
         }
 
+        public static void GoToPage(string uri, Frame frame)
+        {
+            Uri link = new Uri(uri);
+            GoToPage(link, frame);
+        }
+
         public static string getLastPart(Uri link)
         {
             return link.Segments.Last().Replace(".html", String.Empty).Replace("\\", String.Empty).TrimEnd('/');
