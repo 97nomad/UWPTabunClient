@@ -54,12 +54,14 @@ namespace UWPTabunClient.Pages
                     ForceBlock.Text = parser.getStrength();
                     VotesBlock.Text = parser.getRating();
                 }
-            }
-
-            if (isLoggedIn)
-                    LoginPanel.Visibility = Visibility.Visible;
                 else
-                    SinginPanel.Visibility = Visibility.Visible;
+                {
+                    isLoggedIn = false;
+                    LoginBlock.Text = "Guest";
+                    ForceBlock.Text = "null";
+                    VotesBlock.Text = "null";
+                }
+            }
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)

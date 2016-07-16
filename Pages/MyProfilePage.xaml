@@ -13,7 +13,6 @@
         <StackPanel>
             <StackPanel Orientation="Horizontal"
                     Margin="0,0,10,0"
-                    Visibility="Collapsed"
                     Name="LoginPanel">
                 <Image Name="ProfileImage"
                    MaxWidth="40"
@@ -33,14 +32,6 @@
                            FontSize="12"/>
                     </StackPanel>
                 </StackPanel>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal"
-                        Margin="0,0,10,0"
-                        VerticalAlignment="Center"
-                        Visibility="Collapsed"
-                        Name="SinginPanel">
-                <TextBlock Text="Войти"
-                           FontSize="18"/>
             </StackPanel>
         </StackPanel>
     </Button>
