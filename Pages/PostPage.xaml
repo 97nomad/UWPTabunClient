@@ -106,13 +106,14 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
                                 <RichTextBlock DataContext="{x:Bind text}"
                                                Style="{StaticResource StandartHtmlView}"
                                                Loaded="RichTextBlock_Loaded"
-                                               Grid.ColumnSpan="3"
+                                               Grid.ColumnSpan="4"
                                                Grid.Row="0"/>
 
                                 <Button Name="CommentAuthorButton"
@@ -128,6 +129,12 @@
                                     </StackPanel>
                                 </Button>
 
+                                <TextBlock Name="CommentDateTimeBlock"
+                                           Grid.Row="1" 
+                                           Grid.Column="1"
+                                           Text="{x:Bind datetime}"
+                                           Margin="10,0,0,0"/>
+
                                 <Button Name="LeaveCommentButton"
                                         Content="Ответить"
                                         Style="{StaticResource InvisibleButton}"
@@ -135,7 +142,7 @@
                                         Margin="20,0,0,0"
                                         Tag="{x:Bind id}"
                                         Grid.Row="1"
-                                        Grid.Column="1"/>
+                                        Grid.Column="2"/>
 
                                 <TextBlock Text="{x:Bind rating}"
                                            Foreground="{x:Bind ratingColor}"
@@ -143,7 +150,7 @@
                                            HorizontalAlignment="Right"
                                            Margin="0,0,10,0"
                                            Grid.Row="1"
-                                           Grid.Column="2"/>
+                                           Grid.Column="3"/>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

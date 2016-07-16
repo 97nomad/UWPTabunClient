@@ -73,7 +73,7 @@ namespace UWPTabunClient.Parsers
             if (uri.First() == '/')
             {
                 Debug.WriteLine("Кривая ссылка normalizeUri " + uri);
-                return GlobalVariables.linkRoot + uri;
+                return GlobalVariables.linkRootWithoutSlash + uri;
             }
             return uri;
         }

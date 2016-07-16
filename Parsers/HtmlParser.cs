@@ -60,6 +60,24 @@ namespace UWPTabunClient.Parsers
             return resultList;
         }
 
+        public async Task<List<Inline>> convertNodeToListOfInline(HtmlNode node)
+        {
+            List<Inline> resultList = new List<Inline>();
+            foreach (HtmlNode n in node.ChildNodes.ToArray())
+            {
+                try
+                {
+                    Inline tmp = await parseNode(n);
+                    if (tmp != null)
+                        resultList.Add(tmp);
+                } catch (Exception exc)
+                {
+                    Debug.WriteLine(exc.Message);
+                }
+            }
+            return resultList;
+        }
+
         private async Task<Inline> parseNode(HtmlNode node)
         {
             switch (node.Name)
@@ -109,7 +127,7 @@ namespace UWPTabunClient.Parsers
         private Inline pText(HtmlNode node)
         {
             Run run = new Run();
-            run.Text = HtmlEntity.DeEntitize(node.InnerText).Trim();
+            run.Text = HtmlEntity.DeEntitize(node.InnerText).Replace("\t", String.Empty).Replace("\n", String.Empty);//.Trim();
             return run;
         }
 
@@ -147,38 +165,56 @@ namespace UWPTabunClient.Parsers
 
         private async Task<Inline> pA(HtmlNode node)
         {
-
-            InlineUIContainer container = new InlineUIContainer();
-            Button hpButton = new Button();
-            hpButton.Style = App.Current.Resources["HyperLinkInvisibleButton"] as Style;
-            hpButton.Margin = new Thickness(2, 0, 2, 0);
-
-            RichTextBlock contentBlock = new RichTextBlock();
-            contentBlock.IsTextSelectionEnabled = false;
-            contentBlock.Blocks.Add(await convertNodeToParagraph(node));
-            hpButton.Content = contentBlock;
-
-            string link = normalizeUri(node.Attributes["href"].Value);
-            UriParser.isInnerLink(node.Attributes["href"].Value);
-
-            hpButton.Click += (s, e) =>
+            bool isContainsStrangeElemets = false; // Специальный флаг, который определяет, использовать ли Hyperlink или Button для отрисовки ссылки
+            foreach (HtmlNode n in node.ChildNodes.ToArray())
             {
-                switch (UriParser.getInnerLinkType(link))
+                if (n.Name != "#text")
                 {
-                    case UriParser.PageType.Post:
-                        frame.Navigate(typeof(PostPage), UriParser.getLastPart(link));
-                        break;
-                    case UriParser.PageType.Profile:
-                        frame.Navigate(typeof(ProfilePage), UriParser.getLastPart(link));
-                        break;
-                    case UriParser.PageType.Blog:
-                        frame.Navigate(typeof(BlogPage), UriParser.getLastPart(link));
-                        break;
+                    isContainsStrangeElemets = true;
+                    break;
                 }
-            };
+            }
 
-            container.Child = hpButton;
-            return container;
+            if (isContainsStrangeElemets)
+            {
+                InlineUIContainer container = new InlineUIContainer();
+                Button hpButton = new Button();
+                hpButton.Style = App.Current.Resources["HyperLinkInvisibleButton"] as Style;
+                hpButton.Margin = new Thickness(2, 0, 2, 0);
+
+                RichTextBlock contentBlock = new RichTextBlock();
+                contentBlock.IsTextSelectionEnabled = false;
+                contentBlock.Blocks.Add(await convertNodeToParagraph(node));
+                hpButton.Content = contentBlock;
+
+                string link = normalizeUri(node.Attributes["href"].Value);
+                UriParser.isInnerLink(node.Attributes["href"].Value); // Ну и нафига это тут?
+
+                hpButton.Click += (s, e) =>
+                {
+                    UriParser.GoToPage(link, frame);
+                };
+
+                container.Child = hpButton;
+                return container;
+            }
+            else
+            {
+                Hyperlink hyperlink = new Hyperlink();
+                List<Inline> parseResult = await convertNodeToListOfInline(node);
+
+                foreach (Inline i in parseResult)
+                    hyperlink.Inlines.Add(i);
+
+                string link = normalizeUri(node.Attributes["href"].Value);
+                UriParser.isInnerLink(node.Attributes["href"].Value); // Ну и нафига это тут?
+
+                hyperlink.Click += (s, e) =>
+                {
+                    UriParser.GoToPage(link, frame);
+                };
+                return hyperlink;
+            }
         }
 
         private async Task<Inline> pImg(HtmlNode node)

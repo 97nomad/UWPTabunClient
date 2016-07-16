@@ -90,6 +90,15 @@
                                    Name="datetime"
                                    RelativePanel.AlignRightWithPanel="True"
                                    Margin="0,0,10,0"/>
+                                <TextBlock Text="{x:Bind commentsCount}"
+                                           Name="CommentsCountBlock"
+                                           RelativePanel.Below="datetime"
+                                           RelativePanel.AlignLeftWithPanel="True"
+                                           Margin="0,0,10,0" />
+                                <TextBlock Text="Комментариев"
+                                           RelativePanel.RightOf="CommentsCountBlock"
+                                           RelativePanel.AlignVerticalCenterWith="CommentsCountBlock"
+                                           Margin="0,0,10,0" />
                             </RelativePanel>
                         </Grid>
                     </DataTemplate>
