@@ -136,6 +136,9 @@
     <Compile Include="Pages\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\StreamPage.xaml.cs">
       <DependentUpon>StreamPage.xaml</DependentUpon>
     </Compile>
@@ -214,6 +217,10 @@
     <Page Include="Pages\ProfilePage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\StreamPage.xaml">
       <Generator>MSBuild:Compile</Generator>

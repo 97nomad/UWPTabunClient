@@ -48,7 +48,12 @@
                         <StackPanel Orientation="Horizontal"
                                     Name="Stream">
                             <SymbolIcon Symbol="Bullets" />
-                            <TextBlock Text="Прямой эфир" />
+                            <TextBlock Text=" Прямой эфир" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal"
+                                    Name="Settings">
+                            <SymbolIcon Symbol="Setting" />
+                            <TextBlock Text=" Настройки" />
                         </StackPanel>
                     </ListView>
                 </StackPanel>

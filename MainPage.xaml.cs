@@ -63,10 +63,18 @@ namespace UWPTabunClient
         private void PaneList_ItemClick(object sender, ItemClickEventArgs e)
         {
             StackPanel item = (e.ClickedItem as StackPanel);
-            if (item.Name == "Home")
-                MainFrame.Navigate(typeof(MainpagePage));
-            if (item.Name == "Stream")
-                MainFrame.Navigate(typeof(StreamPage)); 
+            switch (item.Name)
+            {
+                case "Home":
+                    MainFrame.Navigate(typeof(MainpagePage));
+                    break;
+                case "Stream":
+                    MainFrame.Navigate(typeof(StreamPage));
+                    break;
+                case "Settings":
+                    MainFrame.Navigate(typeof(SettingsPage));
+                    break;
+            }
             MainMenu.IsPaneOpen = false;
         }
 
