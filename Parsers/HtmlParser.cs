@@ -188,7 +188,7 @@ namespace UWPTabunClient.Parsers
                 hpButton.Content = contentBlock;
 
                 string link = normalizeUri(node.Attributes["href"].Value);
-                UriParser.isInnerLink(node.Attributes["href"].Value);
+                UriParser.isInnerLink(node.Attributes["href"].Value); // Ну и нафига это тут?
 
                 hpButton.Click += (s, e) =>
                 {
@@ -207,22 +207,11 @@ namespace UWPTabunClient.Parsers
                     hyperlink.Inlines.Add(i);
 
                 string link = normalizeUri(node.Attributes["href"].Value);
-                UriParser.isInnerLink(node.Attributes["href"].Value);
+                UriParser.isInnerLink(node.Attributes["href"].Value); // Ну и нафига это тут?
 
                 hyperlink.Click += (s, e) =>
                 {
-                    switch (UriParser.getInnerLinkType(link))
-                    {
-                        case UriParser.PageType.Post:
-                            frame.Navigate(typeof(PostPage), UriParser.getLastPart(link));
-                            break;
-                        case UriParser.PageType.Profile:
-                            frame.Navigate(typeof(ProfilePage), UriParser.getLastPart(link));
-                            break;
-                        case UriParser.PageType.Blog:
-                            frame.Navigate(typeof(BlogPage), UriParser.getLastPart(link));
-                            break;
-                    }
+                    UriParser.GoToPage(link, frame);
                 };
                 return hyperlink;
             }
