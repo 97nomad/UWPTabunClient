@@ -27,9 +27,11 @@ namespace UWPTabunClient.Pages
     {
         private MyProfileParser parser;
         public bool isLoggedIn;
+        public string username;
 
         private LoginDialog loginDialog;
         private ExitDialog exitDialog;
+        private Frame frame;
 
         public MyProfilePage()
         {
@@ -43,14 +45,16 @@ namespace UWPTabunClient.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            frame = e.Parameter as Frame;
 
             if (await parser.loadPage())
             {
                 if (parser.isUserLoggedIn())
                 {
                     isLoggedIn = true;
+                    username = parser.getLogin();
                     ProfileImage.Source = await parser.getProfileImage();
-                    LoginBlock.Text = parser.getLogin();
+                    LoginBlock.Text = username;
                     ForceBlock.Text = parser.getStrength();
                     VotesBlock.Text = parser.getRating();
                 }
@@ -77,14 +81,15 @@ namespace UWPTabunClient.Pages
                 }
             } else
             {
-                await exitDialog.ShowAsync();
+                frame.Navigate(typeof(ProfilePage), username);
+                /*await exitDialog.ShowAsync();
                 if (exitDialog.isSecondButtonWasClicked)
                 {
                     await loginDialog.logout();
                     exitDialog.isSecondButtonWasClicked = false;
                     isLoggedIn = false;
                     Frame.Navigate(typeof(MyProfilePage));
-                }
+                }*/
             }
 
         }

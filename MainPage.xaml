@@ -35,7 +35,11 @@
     <SplitView Name="MainMenu" DisplayMode="Inline" Grid.Row="1">
             <SplitView.Pane>
                 <StackPanel Orientation="Vertical">
-                    <Frame Name="ProfileFrame"/>
+                    <Button Style="{StaticResource InvisibleButton}"
+                            Name="ProfileButton"
+                            Click="ProfileButton_Click">
+                        <Frame Name="ProfileFrame"/>
+                    </Button>
                     <ListView Name="PaneList"
                               ItemClick="PaneList_ItemClick"
                               IsItemClickEnabled="True"

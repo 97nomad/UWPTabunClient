@@ -34,7 +34,7 @@ namespace UWPTabunClient
             currentView.BackRequested += MainPage_BackRequested;
 
             MainFrame.Navigate(typeof(MainpagePage));
-            ProfileFrame.Navigate(typeof(MyProfilePage));
+            ProfileFrame.Navigate(typeof(MyProfilePage), MainFrame);
 
             MainFrame.Navigated += MainFrame_Navigated;
         }
@@ -93,6 +93,15 @@ namespace UWPTabunClient
             CommentRefreshButton.IsEnabled = false;
             await page.refreshComments();
             CommentRefreshButton.IsEnabled = true;
+        }
+
+        private void ProfileButton_Click(object sender, RoutedEventArgs e)
+        {
+            MyProfilePage page = ProfileFrame.Content as MyProfilePage;
+            if (page.isLoggedIn)
+            {
+                MainFrame.Navigate(typeof(ProfilePage), page.username);
+            }
         }
     }
 }

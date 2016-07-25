@@ -22,9 +22,22 @@ namespace UWPTabunClient.Pages
     /// </summary>
     public sealed partial class SettingsPage : Page
     {
+        private ExitDialog exitDialog;
+
         public SettingsPage()
         {
             this.InitializeComponent();
+        }
+
+        private async void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            exitDialog = new ExitDialog();
+            await exitDialog.ShowAsync();
+            if (exitDialog.isSecondButtonWasClicked)
+            {
+                await exitDialog.logout();
+                exitDialog.isSecondButtonWasClicked = false;
+            }       
         }
     }
 }

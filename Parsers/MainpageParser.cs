@@ -71,7 +71,7 @@ namespace UWPTabunClient.Parsers
 
                 var articleBlog = articleHeader.SelectSingleNode(".//a[@class]").InnerText;
 
-                var articleBlogId = articleHeader.SelectSingleNode(".//*[@class='topic-blog']")
+                var articleBlogId = articleHeader.SelectSingleNode(".//*[contains(@class, 'topic-blog')]")
                     .Attributes["href"].Value;
                 articleBlogId = UriParser.getLastPart(articleBlogId);
 

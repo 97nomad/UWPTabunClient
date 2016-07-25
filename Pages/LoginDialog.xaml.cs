@@ -63,14 +63,5 @@ namespace UWPTabunClient.Pages
             if (json.bStateError == false)
                 isLoginSuccessed = true;
         }
-
-        public async Task<bool> logout()
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                var response = await client.GetStringAsync("http://tabun.everypony.ru/login/exit/?security_ls_key=" + Windows.Storage.ApplicationData.Current.LocalSettings.Values["livestreet_security_key"] as string);
-            }
-            return true;
-        }
     }
 }
