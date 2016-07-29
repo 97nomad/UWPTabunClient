@@ -226,7 +226,16 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="TabunCsLibruary\TabunCsLibruary.csproj">
+      <Project>{4d7bb411-785d-4340-a982-0a32bbe76e5e}</Project>
+      <Name>TabunCsLibruary</Name>
+    </ProjectReference>
+    <ProjectReference Include="TabunCsParser\TabunCsParser.csproj">
+      <Project>{d199cd52-8a5d-4e2d-a548-fb6fb016c59d}</Project>
+      <Name>TabunCsParser</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
