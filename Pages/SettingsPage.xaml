@@ -16,7 +16,9 @@
                     Grid.Row="0">
             <Button Content="Выйти" 
                     Name="ExitButton"
-                    Click="ExitButton_Click"/>
+                    Click="ExitButton_Click"
+                    Margin="10,10,0,0"
+                    Visibility="Collapsed"/>
         </StackPanel>
     </Grid>
 </Page>
