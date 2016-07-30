@@ -5,7 +5,7 @@
     xmlns:local="using:UWPTabunClient.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data="using:UWPTabunClient.Models"
+    xmlns:data="using:TabunCsParser"
     mc:Ignorable="d">
 
     <Pivot>
@@ -14,7 +14,7 @@
                    Loaded="CommentsItem_Loaded">
             <ListView Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
               Name="StreamListComments"
-              ItemsSource="{x:Bind streamElementsComments}"
+              ItemsSource="{x:Bind Comments}"
               SelectionMode="None"
               IsItemClickEnabled="True"
               ItemClick="StreamList_ItemClick">
@@ -24,22 +24,22 @@
                             <StackPanel Orientation="Horizontal">
                                 <Button Name="AuthorButton"
                                 Click="AuthorButton_Click"
-                                Tag="{x:Bind author}"
+                                Tag="{x:Bind Author}"
                                 Style="{StaticResource InvisibleButton}"
-                                Content="{x:Bind author}"/>
+                                Content="{x:Bind Author}"/>
                                 <TextBlock Text="в"
                                    Margin="10,0,10,0"/>
                                 <TextBlock Name="BlogButton"
-                                   Text="{x:Bind blog}"
+                                   Text="{x:Bind Blog}"
                                    TextWrapping ="Wrap"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Name="TopicButton"
-                                   Text="{x:Bind topic}"
+                                   Text="{x:Bind TopicName}"
                                    FontWeight="SemiBold"
                                    TextWrapping="Wrap"/>
                                 <TextBlock Name="CommentsCount"
-                                   Text="{x:Bind comments_count}"
+                                   Text="{x:Bind CommentsCount}"
                                    Margin="10,0,0,0"/>
                             </StackPanel>
                         </StackPanel>
@@ -58,7 +58,7 @@
                    Loaded="TopicsItem_Loaded">
             <ListView Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
               Name="StreamListTopics"
-              ItemsSource="{x:Bind streamElementsTopics}"
+              ItemsSource="{x:Bind Topics}"
               SelectionMode="None"
               IsItemClickEnabled="True"
               ItemClick="StreamList_ItemClick">
@@ -68,22 +68,22 @@
                             <StackPanel Orientation="Horizontal">
                                 <Button Name="AuthorButton"
                                 Click="AuthorButton_Click"
-                                Tag="{x:Bind author}"
+                                Tag="{x:Bind Author}"
                                 Style="{StaticResource InvisibleButton}"
-                                Content="{x:Bind author}"/>
+                                Content="{x:Bind Author}"/>
                                 <TextBlock Text="в"
                                    Margin="10,0,10,0"/>
                                 <TextBlock Name="BlogButton"
-                                   Text="{x:Bind blog}"
+                                   Text="{x:Bind Blog}"
                                    TextWrapping ="Wrap"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Name="TopicButton"
-                                   Text="{x:Bind topic}"
+                                   Text="{x:Bind TopicName}"
                                    FontWeight="SemiBold"
                                    TextWrapping="Wrap"/>
                                 <TextBlock Name="CommentsCount"
-                                   Text="{x:Bind comments_count}"
+                                   Text="{x:Bind CommentsCount}"
                                    Margin="10,0,0,0"/>
                             </StackPanel>
                         </StackPanel>

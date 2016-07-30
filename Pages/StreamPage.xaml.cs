@@ -14,6 +14,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using UWPTabunClient.Models;
 using UWPTabunClient.Parsers;
+using TabunCsLibruary;
+using TabunCsParser;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -24,16 +26,18 @@ namespace UWPTabunClient.Pages
     /// </summary>
     public sealed partial class StreamPage : Page
     {
-        List<StreamElement> streamElementsComments;
-        List<StreamElement> streamElementsTopics;
-        StreamParser parser;
+        List<StreamElement> Comments;
+        List<StreamElement> Topics;
+        TabunStream TStream;
+        StreamParser Parser;
 
         public StreamPage()
         {
             this.InitializeComponent();
-            streamElementsComments = new List<StreamElement>();
-            streamElementsTopics = new List<StreamElement>();
-            parser = new StreamParser();
+            Comments = new List<StreamElement>();
+            Topics = new List<StreamElement>();
+            TStream = new TabunStream();
+            Parser = new StreamParser();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -43,8 +47,8 @@ namespace UWPTabunClient.Pages
 
         private void StreamList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var item = e.ClickedItem as StreamElement;
-            Frame.Navigate(typeof(PostPage), item.link);
+            //var item = (StreamElement)e.ClickedItem;
+            //Frame.Navigate(typeof(PostPage), item.Link);
         }
 
         private void AuthorButton_Click(object sender, RoutedEventArgs e)
@@ -57,7 +61,12 @@ namespace UWPTabunClient.Pages
         {
             try
             {
-                streamElementsComments = await parser.getStreamElements(true);
+                
+                string RawComments = await TStream.GetNewComments(new Dictionary<string, string>
+                {
+                    {"security_ls_key", Windows.Storage.ApplicationData.Current.LocalSettings.Values["livestreet_security_key"].ToString() }
+                });
+                Comments = Parser.Parse(RawComments);
                 Bindings.Update();
             } catch (Exception exc)
             {
@@ -69,7 +78,11 @@ namespace UWPTabunClient.Pages
         {
             try
             {
-                streamElementsTopics = await parser.getStreamElements(false);
+                string RawTopics = await TStream.GetNewTopics(new Dictionary<string, string>
+                {
+                    {"security_ls_key", Windows.Storage.ApplicationData.Current.LocalSettings.Values["livestreet_security_key"] as string }
+                });
+                Topics = Parser.Parse(RawTopics);
                 Bindings.Update();
             } catch (Exception exc)
             {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TabunCsParser
 {
-    public struct StreamElement
+    public class StreamElement
     {
         public string Author;
         public string Blog;
