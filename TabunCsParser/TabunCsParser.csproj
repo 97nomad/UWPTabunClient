@@ -112,7 +112,7 @@
     <Compile Include="Models\MainPage.cs" />
     <Compile Include="Models\PostPreview.cs" />
     <Compile Include="Models\StreamElement.cs" />
-    <Compile Include="PostPreviwParser.cs" />
+    <Compile Include="PostPreviewParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StreamParser.cs" />
     <EmbeddedResource Include="Properties\TabunCsParser.rd.xml" />

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TabunCsParser
 {
-    public class PostPreviwParser : AbstractParser
+    public class PostPreviewParser : AbstractParser
     {
         HtmlNode RootNode;
 
@@ -68,7 +68,7 @@ namespace TabunCsParser
 
         private string GetRating()
         {
-            return RootNode.SelectSingleNode("//div[@class='vote-item vote-count']").InnerText;
+            return RootNode.SelectSingleNode("//div[@class='vote-item vote-count']").InnerText.Trim();
         }
 
         private string GetVotesTotal()
@@ -78,7 +78,7 @@ namespace TabunCsParser
 
         private string GetText()
         {
-            return RootNode.SelectSingleNode(".//div[@class='topic-content text']").InnerText;
+            return RootNode.SelectSingleNode(".//div[@class='topic-content text']").InnerHtml;
         }
 
         private List<string> GetTags()

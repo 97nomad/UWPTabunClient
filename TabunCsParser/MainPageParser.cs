@@ -36,13 +36,13 @@ namespace TabunCsParser
         private List<PostPreview> GetPosts()
         {
             List<PostPreview> Result = new List<PostPreview>();
-            PostPreviwParser Parser = new PostPreviwParser();
+            PostPreviewParser Parser = new PostPreviewParser();
 
             HtmlNodeCollection Articles = RootNode.SelectNodes("//article");
 
             foreach (HtmlNode Article in Articles)
             {
-                Parser.Parse(Article.InnerHtml);
+                Result.Add(Parser.Parse(Article.InnerHtml));
             }
             return Result;
         }

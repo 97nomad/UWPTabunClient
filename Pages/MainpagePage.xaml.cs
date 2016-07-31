@@ -1,25 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using UWPTabunClient.Models;
-using HtmlAgilityPack;
 using UWPTabunClient.Parsers;
-using Windows.UI.Xaml.Documents;
-using System.Diagnostics;
-using UWPTabunClient.Pages;
 using TabunCsParser;
 using TabunCsLibruary;
+using Windows.UI.Text;
+using System.Threading.Tasks;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -30,23 +17,12 @@ namespace UWPTabunClient.Pages
     /// </summary>
     public sealed partial class MainpagePage : Page
     {
-        private List<PostPreview> Posts;
+        HtmlParser Parser;
 
         public MainpagePage()
         {
+            Parser = new HtmlParser();
             this.InitializeComponent();
-        }
-
-        private void AuthorBlock_Click(object sender, RoutedEventArgs e)
-        {
-            string author = (sender as Button).Tag.ToString();
-            Frame.Navigate(typeof(ProfilePage), author);
-        }
-
-        private void PostsList_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var item = (e.ClickedItem as Post);
-            Frame.Navigate(typeof(PostPage), item.id);
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -61,8 +37,23 @@ namespace UWPTabunClient.Pages
 
             string RawPage = await new TabunMainPage().GetPage(PageNumber);
             TabunCsParser.MainPage Page = new MainPageParser().Parse(RawPage);
-            Posts = Page.Posts;
-            Bindings.Update();
+            foreach (var P in Page.Posts)
+            {
+                await AddPostToList(P);
+            }
+            PostsList.ItemClick += (s, ev) =>
+            {
+                var item = (ev.ClickedItem as Grid);
+                Frame.Navigate(typeof(PostPage), int.Parse(item.Tag.ToString()));
+            };
+            BackButton.Click += (s, ev) =>
+            {
+                Frame.Navigate(typeof(MainpagePage), PageNumber - 1);
+            };
+            ForwardButton.Click += (s, ev) =>
+            {
+                Frame.Navigate(typeof(MainpagePage), PageNumber + 1);
+            };
 
             ForwardButton.Visibility = Visibility.Visible;
             if (PageNumber != 1)
@@ -73,27 +64,102 @@ namespace UWPTabunClient.Pages
             PostsList.Visibility = Visibility.Visible;
         }
 
-        // Один огромный костыль
-        private void RichTextBlock_Loaded(object sender, RoutedEventArgs e)
-        {
-            var rtb = sender as RichTextBlock;
-            rtb.Blocks.Add(rtb.DataContext as Paragraph);
-        }
+        private async Task<bool> AddPostToList(PostPreview Post)    // Возвращает ничего не значащий bool чтобы посты в нужном порядке шли
+        { // За это безобразие винить кретина, который создал XAML
+            Grid PostGrid = new Grid();
+            RowDefinition RowDef0 = new RowDefinition();
+            RowDefinition RowDef1 = new RowDefinition();
+            RowDefinition RowDef2 = new RowDefinition();
+            RowDefinition RowDef3 = new RowDefinition();
+            RowDefinition RowDef4 = new RowDefinition();
+            PostGrid.RowDefinitions.Add(RowDef0);
+            PostGrid.RowDefinitions.Add(RowDef1);
+            PostGrid.RowDefinitions.Add(RowDef2);
+            PostGrid.RowDefinitions.Add(RowDef3);
+            PostGrid.RowDefinitions.Add(RowDef4);
 
-        private void BlogButton_Click(object sender, RoutedEventArgs e)
-        {
-            string blogId = (sender as Button).Tag.ToString();
-            Frame.Navigate(typeof(BlogPage), blogId);
-        }
+            PostGrid.VerticalAlignment = VerticalAlignment.Top;
+            PostGrid.HorizontalAlignment = HorizontalAlignment.Stretch;
+            PostGrid.Tag = Post.Id;
 
-        private void BackButton_Click(object sender, RoutedEventArgs e)
-        {
-            //Frame.Navigate(typeof(MainpagePage), parser.PageNumber - 1);
-        }
+            TextBlock Title = new TextBlock();
+            Title.Text = Post.Title;
+            Title.TextWrapping = TextWrapping.WrapWholeWords;
+            Title.HorizontalAlignment = HorizontalAlignment.Left;
+            Title.FontWeight = FontWeights.SemiBold;
+            Title.FontSize = 18;
+            Grid.SetRow(Title, 0);  // О_О
+            PostGrid.Children.Add(Title);
 
-        private void ForwardButton_Click(object sender, RoutedEventArgs e)
-        {
-            //Frame.Navigate(typeof(MainpagePage), parser.PageNumber + 1);
+            StackPanel HeadPanel = new StackPanel();
+            HeadPanel.Orientation = Orientation.Horizontal;
+            Grid.SetRow(HeadPanel, 1);
+            PostGrid.Children.Add(HeadPanel);
+
+            TextBlock RatingBlock = new TextBlock();
+            RatingBlock.Text = Post.Rating;
+            HeadPanel.Children.Add(RatingBlock);
+
+            Button AuthorButton = new Button();
+            AuthorButton.Style = App.Current.Resources["InvisibleButton"] as Style;
+            AuthorButton.Click += (s, e) =>
+            {
+                Frame.Navigate(typeof(ProfilePage), Post.Author);
+            };
+
+            StackPanel AuthorPanel = new StackPanel();
+            AuthorPanel.Orientation = Orientation.Horizontal;
+            AuthorButton.Content = AuthorPanel;
+
+            Image AuthorImage = new Image();
+            AuthorPanel.Children.Add(AuthorImage);
+
+            TextBlock AuthorName = new TextBlock();
+            AuthorName.Text = Post.Author;
+            AuthorPanel.Children.Add(AuthorName);
+
+            HeadPanel.Children.Add(AuthorButton);
+
+            TextBlock InBlog = new TextBlock();
+            InBlog.Text = " в блоге ";
+            HeadPanel.Children.Add(InBlog);
+
+            Button BlogButton = new Button();
+            BlogButton.Style = App.Current.Resources["InvisibleButton"] as Style;
+            BlogButton.Content = Post.Blog;
+            BlogButton.Click += (s, e) =>
+            {
+                Frame.Navigate(typeof(BlogPage), Post.BlogId);
+            };
+            HeadPanel.Children.Add(BlogButton);
+
+            RichTextBlock ArticleContentBlock = new RichTextBlock();
+            ArticleContentBlock.Style = App.Current.Resources["StandartHtmlView"] as Style;
+            ArticleContentBlock.Blocks.Add(await Parser.ConvertHTMLTextToParagraph(Post.Text));
+            Grid.SetRow(ArticleContentBlock, 2);
+            PostGrid.Children.Add(ArticleContentBlock);
+
+            RichTextBlock TagsContentBlock = new RichTextBlock();
+            TagsContentBlock.Style = App.Current.Resources["StandartHtmlView"] as Style;
+            // TODO: Добавить отрисовку содержимого
+            Grid.SetRow(TagsContentBlock, 3);
+            PostGrid.Children.Add(TagsContentBlock);
+
+            StackPanel FooterPanel = new StackPanel();
+            FooterPanel.Orientation = Orientation.Horizontal;
+            Grid.SetRow(FooterPanel, 4);
+            PostGrid.Children.Add(FooterPanel);
+
+            TextBlock DateTimeBlock = new TextBlock();
+            DateTimeBlock.Text = Post.DateTime;
+            FooterPanel.Children.Add(DateTimeBlock);
+
+            TextBlock CommentsCountBlock = new TextBlock();
+            CommentsCountBlock.Text = Post.CommentsCount + " Комментариев";
+            FooterPanel.Children.Add(CommentsCountBlock);
+
+            PostsList.Items.Add(PostGrid);
+            return true;
         }
     }
 }

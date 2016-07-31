@@ -20,6 +20,13 @@ namespace UWPTabunClient.Parsers
     {
         public Frame frame;
 
+        public async Task<Paragraph> ConvertHTMLTextToParagraph(string Text)
+        {
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(Text);
+            return await convertNodeToParagraph(doc.DocumentNode);
+        }
+
         public async Task<Paragraph> convertNodeToParagraph(HtmlNode node)
         {
             Paragraph paragraph = new Paragraph();
