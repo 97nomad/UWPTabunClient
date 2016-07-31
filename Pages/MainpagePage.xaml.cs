@@ -18,6 +18,8 @@ using UWPTabunClient.Parsers;
 using Windows.UI.Xaml.Documents;
 using System.Diagnostics;
 using UWPTabunClient.Pages;
+using TabunCsParser;
+using TabunCsLibruary;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -28,13 +30,11 @@ namespace UWPTabunClient.Pages
     /// </summary>
     public sealed partial class MainpagePage : Page
     {
-        private List<Post> posts;
-        private MainpageParser parser;
+        private List<PostPreview> Posts;
 
         public MainpagePage()
         {
             this.InitializeComponent();
-            parser = new MainpageParser();
         }
 
         private void AuthorBlock_Click(object sender, RoutedEventArgs e)
@@ -52,30 +52,20 @@ namespace UWPTabunClient.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            parser.htmlParser.frame = Frame;
 
             LoadingBar.IsEnabled = true;
 
-            int page = 0;
+            int PageNumber = 1;
             if (e.Parameter != null)
-                int.TryParse(e.Parameter.ToString(), out page);
+                int.TryParse(e.Parameter.ToString(), out PageNumber);
 
-            if (await parser.loadPage(page))
-            {
-                try {
-                    posts = await parser.getPosts();
-                    Bindings.Update();
-                } catch (Exception exp)
-                {
-                    Frame.Navigate(typeof(ErrorPage), exp.Message);
-                }
-            } else
-            {
-                Frame.Navigate(typeof(ErrorPage), "Ошибка при загрузке страницы");
-            }
+            string RawPage = await new TabunMainPage().GetPage(PageNumber);
+            TabunCsParser.MainPage Page = new MainPageParser().Parse(RawPage);
+            Posts = Page.Posts;
+            Bindings.Update();
 
             ForwardButton.Visibility = Visibility.Visible;
-            if (parser.PageNumber != 1)
+            if (PageNumber != 1)
                 BackButton.Visibility = Visibility.Visible;
 
             LoadingBar.IsEnabled = false;
@@ -98,12 +88,12 @@ namespace UWPTabunClient.Pages
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(MainpagePage), parser.PageNumber - 1);
+            //Frame.Navigate(typeof(MainpagePage), parser.PageNumber - 1);
         }
 
         private void ForwardButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(MainpagePage), parser.PageNumber + 1);
+            //Frame.Navigate(typeof(MainpagePage), parser.PageNumber + 1);
         }
     }
 }

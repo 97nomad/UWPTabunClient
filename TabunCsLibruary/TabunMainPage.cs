@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TabunCsLibruary
 {
-    class TabunMainPage
+    public class TabunMainPage
     {
         TabunWebClient TWebClient;
 

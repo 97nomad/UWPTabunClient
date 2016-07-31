@@ -5,7 +5,7 @@
     xmlns:local="using:UWPTabunClient"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data="using:UWPTabunClient.Models"
+    xmlns:data="using:TabunCsParser"
     mc:Ignorable="d">
 
     <ScrollViewer>
@@ -15,18 +15,18 @@
 
             <ListView Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                       Name="PostsList"
-                      ItemsSource="{x:Bind posts, Mode=OneWay}"
+                      ItemsSource="{x:Bind Posts, Mode=OneWay}"
                       SelectionMode="None"
                       IsItemClickEnabled="True"
                       ItemClick="PostsList_ItemClick"
                       Visibility="Collapsed">
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="data:Post">
+                    <DataTemplate x:DataType="data:PostPreview">
                         <Grid VerticalAlignment="Top"
                               HorizontalAlignment="Stretch"
                               Background="{ThemeResource AppBarBackgroundThemeBrush}"
                               Margin="5,5,10,5"
-                              Tag="{x:Bind id}">
+                              Tag="{x:Bind Id}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -34,7 +34,7 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="{x:Bind title}"
+                            <TextBlock Text="{x:Bind Title}"
                                        Name="TitleBlock"
                                        Grid.Row="0"
                                        TextWrapping="WrapWholeWords"
@@ -46,12 +46,12 @@
                                 <Button RelativePanel.AlignLeftWithPanel="True" 
                                         Name="AuthorBlock"
                                         Click="AuthorBlock_Click"
-                                        Tag="{x:Bind author}"
+                                        Tag="{x:Bind Author}"
                                         Style="{StaticResource InvisibleButton}">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="{x:Bind author_image}"
-                                               x:Name="imageContorl"/>
-                                        <TextBlock Text="{x:Bind author}" />
+                                        <!--<Image Source="{x:Bind AuthorImage}"
+                                               x:Name="imageContorl"/>-->
+                                        <TextBlock Text="{x:Bind Author}" />
                                     </StackPanel>
                                 </Button>
                                 <TextBlock Text=" в блоге "
@@ -62,15 +62,15 @@
                                         Name="BlogButton"
                                         Click="BlogButton_Click"
                                         Style="{StaticResource InvisibleButton}"
-                                        Tag="{x:Bind blog_id}">
-                                    <TextBlock Text="{x:Bind blog}" />
+                                        Tag="{x:Bind BlogId}">
+                                    <TextBlock Text="{x:Bind Blog}" />
                                 </Button>
-                                <TextBlock Text="{x:Bind rating}" 
+                                <TextBlock Text="{x:Bind Rating}" 
                                    RelativePanel.AlignRightWithPanel="True"/>
                             </RelativePanel>
 
                             <StackPanel Orientation="Vertical" Grid.Row="2">
-                                <RichTextBlock DataContext="{x:Bind text}" 
+                                <RichTextBlock DataContext="{x:Bind Text}" 
                                        Style="{StaticResource StandartHtmlView}"
                                        Loaded="RichTextBlock_Loaded"/>
                             </StackPanel>
@@ -81,16 +81,16 @@
                                     RelativePanel.LeftOf="datetime">
                                     <TextBlock Text="Теги: "
                                    Name="_tags"/>
-                                    <TextBlock Text="{x:Bind tags}"
+                                    <TextBlock Text="{x:Bind Tags}"
                                        RelativePanel.RightOf="_tags"
                                        TextWrapping="WrapWholeWords"
                                        Margin="10,0,10,0"/>
                                 </StackPanel>
-                                <TextBlock Text="{x:Bind datatime}" 
+                                <TextBlock Text="{x:Bind DateTime}" 
                                    Name="datetime"
                                    RelativePanel.AlignRightWithPanel="True"
                                    Margin="0,0,10,0"/>
-                                <TextBlock Text="{x:Bind commentsCount}"
+                                <TextBlock Text="{x:Bind CommentsCount}"
                                            Name="CommentsCountBlock"
                                            RelativePanel.Below="datetime"
                                            RelativePanel.AlignLeftWithPanel="True"

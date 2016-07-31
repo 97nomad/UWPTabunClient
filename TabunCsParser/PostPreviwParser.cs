@@ -34,8 +34,8 @@ namespace TabunCsParser
 
         private int GetId()
         {
-            Uri FullLink = new Uri(RootNode.SelectSingleNode("//link[@rel='alternate']").Attributes["href"].Value);
-            return int.Parse(FullLink.Segments.Last());
+            Uri FullLink = new Uri(RootNode.SelectSingleNode("//h1[@class='topic-title word-wrap']//a").Attributes["href"].Value);
+            return int.Parse(FullLink.Segments.Last().Split('.')[0]);
         }
 
         private string GetTitle()
@@ -99,7 +99,7 @@ namespace TabunCsParser
 
         private string GetCommentsCount()
         {
-            return RootNode.SelectSingleNode("//span[@id='count-comments']").InnerText;
+            return RootNode.SelectSingleNode("//li[@class='topic-info-comments']").InnerText.Trim();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace TabunCsParser
         {
         }
 
-        public async Task<MainPage> Parse(string page)
+        public MainPage Parse(string page)
         {
             RootNode = GetRootNodeOfPage(page);
 
@@ -42,7 +42,7 @@ namespace TabunCsParser
 
             foreach (HtmlNode Article in Articles)
             {
-                Parser.Parse(Article.InnerText);
+                Parser.Parse(Article.InnerHtml);
             }
             return Result;
         }
