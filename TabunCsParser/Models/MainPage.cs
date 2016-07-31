@@ -8,7 +8,7 @@ namespace TabunCsParser
 {
     public struct MainPage
     {
-        public List<string> Posts;
+        public List<PostPreview> Posts;
         public int Page;
     }
 }

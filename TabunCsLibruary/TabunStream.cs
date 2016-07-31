@@ -8,19 +8,20 @@ namespace TabunCsLibruary
 {
     public class TabunStream
     {
+        TabunWebClient TWebClient;
         public TabunStream()
         {
-
+            TWebClient = new TabunWebClient();
         }
 
         public async Task<string> GetNewComments(Dictionary<string, string> Parameters)
         {
-            return await TabunWebClient.GetPageAsync(TabunGlobalVariables.LinkAjaxStreamComments, Parameters);
+            return await TWebClient.GetPostAsync(TabunGlobalVariables.LinkAjaxStreamComments, Parameters);
         }
 
         public async Task<string> GetNewTopics(Dictionary<string, string> Parameters)
         {
-            return await TabunWebClient.GetPageAsync(TabunGlobalVariables.LinkAjaxStreamTopics, Parameters);
+            return await TWebClient.GetPostAsync(TabunGlobalVariables.LinkAjaxStreamTopics, Parameters);
         }
     }
 }

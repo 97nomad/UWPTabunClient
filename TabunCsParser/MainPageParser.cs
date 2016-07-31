@@ -21,27 +21,28 @@ namespace TabunCsParser
 
             return new MainPage
             {
-                Page = GetPage(),
+                Page = GetPageNumber(),
                 Posts = GetPosts(),
             };
         }
 
-        private int GetPage()
+        private int GetPageNumber()
         {
             int Result = 0;
             int.TryParse(RootNode.SelectSingleNode("//div[@class='pagination']//li[@class='active']").InnerText, out Result);
             return Result;
         }
 
-        private List<string> GetPosts()
+        private List<PostPreview> GetPosts()
         {
-            List<string> Result = new List<string>();
+            List<PostPreview> Result = new List<PostPreview>();
+            PostPreviwParser Parser = new PostPreviwParser();
 
             HtmlNodeCollection Articles = RootNode.SelectNodes("//article");
 
             foreach (HtmlNode Article in Articles)
             {
-                Result.Add(Article.InnerHtml);
+                Parser.Parse(Article.InnerText);
             }
             return Result;
         }

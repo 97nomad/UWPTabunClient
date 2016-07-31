@@ -64,7 +64,7 @@ namespace UWPTabunClient.Pages
                 
                 string RawComments = await TStream.GetNewComments(new Dictionary<string, string>
                 {
-                    {"security_ls_key", Windows.Storage.ApplicationData.Current.LocalSettings.Values["livestreet_security_key"].ToString() }
+                    {"security_ls_key", Windows.Storage.ApplicationData.Current.LocalSettings.Values["livestreet_security_key"] as string }
                 });
                 Comments = Parser.Parse(RawComments);
                 Bindings.Update();

@@ -110,7 +110,9 @@
     <Compile Include="AbstractParser.cs" />
     <Compile Include="MainPageParser.cs" />
     <Compile Include="Models\MainPage.cs" />
+    <Compile Include="Models\PostPreview.cs" />
     <Compile Include="Models\StreamElement.cs" />
+    <Compile Include="PostPreviwParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StreamParser.cs" />
     <EmbeddedResource Include="Properties\TabunCsParser.rd.xml" />
