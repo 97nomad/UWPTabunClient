@@ -41,6 +41,7 @@ namespace UWPTabunClient.Pages
             {
                 await AddPostToList(P);
             }
+
             PostsList.ItemClick += (s, ev) =>
             {
                 var item = (ev.ClickedItem as Grid);
@@ -82,6 +83,7 @@ namespace UWPTabunClient.Pages
             PostGrid.HorizontalAlignment = HorizontalAlignment.Stretch;
             PostGrid.Tag = Post.Id;
 
+            // Заголовок
             TextBlock Title = new TextBlock();
             Title.Text = Post.Title;
             Title.TextWrapping = TextWrapping.WrapWholeWords;
@@ -91,6 +93,7 @@ namespace UWPTabunClient.Pages
             Grid.SetRow(Title, 0);  // О_О
             PostGrid.Children.Add(Title);
 
+            // Рейтинг, автор и блог
             StackPanel HeadPanel = new StackPanel();
             HeadPanel.Orientation = Orientation.Horizontal;
             Grid.SetRow(HeadPanel, 1);
@@ -133,18 +136,21 @@ namespace UWPTabunClient.Pages
             };
             HeadPanel.Children.Add(BlogButton);
 
+            // Основной контент
             RichTextBlock ArticleContentBlock = new RichTextBlock();
             ArticleContentBlock.Style = App.Current.Resources["StandartHtmlView"] as Style;
             ArticleContentBlock.Blocks.Add(await Parser.ConvertHTMLTextToParagraph(Post.Text));
             Grid.SetRow(ArticleContentBlock, 2);
             PostGrid.Children.Add(ArticleContentBlock);
 
+            // Теги
             RichTextBlock TagsContentBlock = new RichTextBlock();
             TagsContentBlock.Style = App.Current.Resources["StandartHtmlView"] as Style;
             // TODO: Добавить отрисовку содержимого
             Grid.SetRow(TagsContentBlock, 3);
             PostGrid.Children.Add(TagsContentBlock);
 
+            // Время публикации и количество комментариев
             StackPanel FooterPanel = new StackPanel();
             FooterPanel.Orientation = Orientation.Horizontal;
             Grid.SetRow(FooterPanel, 4);
