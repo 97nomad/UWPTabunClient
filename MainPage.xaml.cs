@@ -91,7 +91,7 @@ namespace UWPTabunClient
         {
             PostPage page = MainFrame.Content as PostPage;
             CommentRefreshButton.IsEnabled = false;
-            await page.refreshComments();
+            //await page.refreshComments();
             CommentRefreshButton.IsEnabled = true;
         }
 

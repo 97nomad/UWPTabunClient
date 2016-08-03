@@ -13,11 +13,12 @@ using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using UWPTabunClient.Models;
 using UWPTabunClient.Pages;
-using UWPTabunClient.Parsers;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using TabunCsLibruary;
+using TabunCsParser;
+using Windows.UI.Text;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,71 +26,115 @@ namespace UWPTabunClient.Pages
 {
     public sealed partial class PostPage : Page
     {
-        Post post;
-        List<Comment> comments;
-        PostParser parser;
 
         public PostPage()
         {
             this.InitializeComponent();
-            parser = new PostParser();
-        }
-
-        private void LoadPost()
-        {
-            TitleBlock.Text = post.title;
-            RatingBlock.Text = post.rating;
-            AuthorImage.Source = post.author_image;
-            AuthorBlock.Text = post.author;
-            BlogBlock.Text = post.blog;
-            BlogButton.Tag = post.blog_id;
-
-            BodyBlock.Blocks.Add(post.text);
-
-            TagsBlock.Text = post.tags;
-            DateTimeBlock.Text = post.datatime;
-            CommentsCountBlock.Text = post.commentsCount;
-        }
-
-        private void LoadComments()
-        {
-            foreach (Comment c in comments)
-            {
-                CommentsBlock.Items.Add(c);
-            }
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            parser.htmlParser.frame = Frame;
 
             LoadingBar.IsEnabled = true;
 
-            if (await parser.loadPage(e.Parameter.ToString()))
-            {
-                try {
-                    post = await parser.getPost();
-                    comments = (await parser.getComments()).Descendants();
-                    LoadPost();
-                    LoadComments();
-                } catch (Exception exp)
-                {
-                    Frame.Navigate(typeof(ErrorPage), exp.Message);
-                }
-            } else
-            {
-                Frame.Navigate(typeof(ErrorPage), "Ошибка при загрузке страницы");
-            }
+            TabunAPI API = new TabunAPI();
+            PostParser Parser = new PostParser();
+
+            string RawPost = await API.GetPost(int.Parse(e.Parameter.ToString()));
+            Post ParsedPost = Parser.Parse(RawPost);
+
+            DrawPost(ParsedPost);
 
             LoadingBar.IsEnabled = false;
             LoadingBar.IsIndeterminate = false;
             MainGrid.Visibility = Visibility.Visible;
         }
 
+        private async void DrawPost(Post Post)
+        {
+            TextBlock TitleBlock = new TextBlock();
+            TitleBlock.Text = Post.Title;
+            TitleBlock.FontSize = 18;
+            TitleBlock.FontWeight = FontWeights.SemiBold;
+            Grid.SetRow(TitleBlock, 0);
+            MainGrid.Children.Add(TitleBlock);
+
+            StackPanel HeadPanel = new StackPanel();
+            HeadPanel.Orientation = Orientation.Horizontal;
+            Grid.SetRow(HeadPanel, 1);
+            MainGrid.Children.Add(HeadPanel);
+
+            TextBlock RatingBlock = new TextBlock();
+            RatingBlock.Text = Post.Rating;
+            HeadPanel.Children.Add(RatingBlock);
+
+            Button AuthorButton = new Button();
+            AuthorButton.Style = App.Current.Resources["InvisibleButton"] as Style;
+            AuthorButton.Click += (s, e) =>
+            {
+                Frame.Navigate(typeof(ProfilePage), Post.Author);
+            };
+
+            StackPanel AuthorPanel = new StackPanel();
+            AuthorPanel.Orientation = Orientation.Horizontal;
+            AuthorButton.Content = AuthorPanel;
+
+            Image AuthorImage = new Image();
+            AuthorPanel.Children.Add(AuthorImage);
+
+            TextBlock AuthorName = new TextBlock();
+            AuthorName.Text = Post.Author;
+            AuthorPanel.Children.Add(AuthorName);
+
+            HeadPanel.Children.Add(AuthorButton);
+
+            TextBlock InBlog = new TextBlock();
+            InBlog.Text = " в блоге ";
+            HeadPanel.Children.Add(InBlog);
+
+            Button BlogButton = new Button();
+            BlogButton.Style = App.Current.Resources["InvisibleButton"] as Style;
+            BlogButton.Content = Post.Blog;
+            BlogButton.Click += (s, e) =>
+            {
+                Frame.Navigate(typeof(BlogPage), Post.BlogId);
+            };
+            HeadPanel.Children.Add(BlogButton);
+
+            // Основной контент
+            Parsers.HtmlParser Parser = new Parsers.HtmlParser();
+            RichTextBlock ArticleContentBlock = new RichTextBlock();
+            ArticleContentBlock.Style = App.Current.Resources["StandartHtmlView"] as Style;
+            ArticleContentBlock.Blocks.Add(await Parser.ConvertHTMLTextToParagraph(Post.Text));
+            Grid.SetRow(ArticleContentBlock, 2);
+            MainGrid.Children.Add(ArticleContentBlock);
+
+            // Теги
+            RichTextBlock TagsContentBlock = new RichTextBlock();
+            TagsContentBlock.Style = App.Current.Resources["StandartHtmlView"] as Style;
+            // TODO: Добавить отрисовку содержимого
+            Grid.SetRow(TagsContentBlock, 3);
+            MainGrid.Children.Add(TagsContentBlock);
+
+            // Время публикации и количество комментариев
+            StackPanel FooterPanel = new StackPanel();
+            FooterPanel.Orientation = Orientation.Horizontal;
+            Grid.SetRow(FooterPanel, 4);
+            MainGrid.Children.Add(FooterPanel);
+
+            TextBlock DateTimeBlock = new TextBlock();
+            DateTimeBlock.Text = Post.DateTime;
+            FooterPanel.Children.Add(DateTimeBlock);
+
+            TextBlock CommentsCountBlock = new TextBlock();
+            CommentsCountBlock.Text = Post.CommentsCount + " Комментариев";
+            FooterPanel.Children.Add(CommentsCountBlock);
+        }
+
         private void AuthorButton_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(ProfilePage), AuthorBlock.Text);
+            //Frame.Navigate(typeof(ProfilePage), AuthorBlock.Text);
         }
 
         private void CommentAuthorButton_Click(object sender, RoutedEventArgs e)
@@ -111,14 +156,14 @@ namespace UWPTabunClient.Pages
             Frame.Navigate(typeof(BlogPage), blogId);
         }
 
-        private async void LeaveCommentButton_Click(object sender, RoutedEventArgs e)
+        /*private async void LeaveCommentButton_Click(object sender, RoutedEventArgs e)
         {
-            LeaveCommentDialog dialog = new LeaveCommentDialog(parser.postId, int.Parse((sender as Button).Tag.ToString()));
-            await dialog.ShowAsync();
-            await refreshComments();
-        }
+            //LeaveCommentDialog dialog = new LeaveCommentDialog(parser.postId, int.Parse((sender as Button).Tag.ToString()));
+            //await dialog.ShowAsync();
+            //await refreshComments();
+        }*/
 
-        public async Task<bool> refreshComments()
+        /*public async Task<bool> refreshComments()
         {
             var newComments = await parser.refreshComments();
             if (newComments != null)
@@ -148,6 +193,6 @@ namespace UWPTabunClient.Pages
                 }
             }
             return true;
-        }
+        }*/
     }
 }
