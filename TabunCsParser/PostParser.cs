@@ -119,11 +119,11 @@ namespace TabunCsParser
         {
             List<Comment> Result = new List<Comment>();
             CommentParser Parser = new CommentParser();
-            HtmlNodeCollection CommentNodes = RootNode.SelectNodes("//section[@class='comment']");
+            HtmlNodeCollection CommentNodes = RootNode.SelectNodes("//section[@class='comment  ']");
             if (CommentNodes != null) {
                 foreach (HtmlNode N in CommentNodes)
                 {
-                    Result.Add(Parser.Parse(N.InnerHtml));
+                    Result.Add(Parser.Parse(N.OuterHtml));
                 }
             }
 

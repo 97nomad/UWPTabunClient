@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using TabunCsLibruary;
 using TabunCsParser;
 using Windows.UI.Text;
+using Windows.UI;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -116,6 +117,85 @@ namespace UWPTabunClient.Pages
             // TODO: Добавить отрисовку содержимого
             Grid.SetRow(TagsContentBlock, 3);
             MainGrid.Children.Add(TagsContentBlock);
+
+            // Комментарии
+            StackPanel CommentsPanel = new StackPanel();
+            CommentsPanel.Orientation = Orientation.Vertical;
+            Grid.SetRow(CommentsPanel, 4);
+            MainGrid.Children.Add(CommentsPanel);
+            foreach (Comment Comm in Post.Comments)
+            {
+                Grid CommentGrid = new Grid();
+                CommentGrid.HorizontalAlignment = HorizontalAlignment.Stretch;
+                CommentGrid.Margin = new Thickness(1);
+                if (Comm.IsRead)
+                    CommentGrid.Background = new SolidColorBrush(Colors.LightGray);
+                else
+                    CommentGrid.Background = new SolidColorBrush(Colors.Aqua);
+
+                RowDefinition RowDef0 = new RowDefinition();
+                RowDefinition RowDef1 = new RowDefinition();
+                ColumnDefinition ColDef0 = new ColumnDefinition();
+                ColumnDefinition ColDef1 = new ColumnDefinition();
+                ColumnDefinition ColDef2 = new ColumnDefinition();
+                ColumnDefinition ColDef3 = new ColumnDefinition();
+                CommentGrid.RowDefinitions.Add(RowDef0);
+                CommentGrid.RowDefinitions.Add(RowDef1);
+                CommentGrid.ColumnDefinitions.Add(ColDef0);
+                CommentGrid.ColumnDefinitions.Add(ColDef1);
+                CommentGrid.ColumnDefinitions.Add(ColDef2);
+                CommentGrid.ColumnDefinitions.Add(ColDef3);
+
+                RichTextBlock ContentBlock = new RichTextBlock();
+                ContentBlock.Style = App.Current.Resources["StandartHtmlView"] as Style;
+                ContentBlock.Blocks.Add(await Parser.ConvertHTMLTextToParagraph(Comm.Text));
+                Grid.SetRow(ContentBlock, 0);
+                Grid.SetColumnSpan(ContentBlock, 4);
+                CommentGrid.Children.Add(ContentBlock);
+
+                Button CommentAuthorButton = new Button();
+                CommentAuthorButton.Style = App.Current.Resources["InvisibleButton"] as Style;
+                Grid.SetRow(CommentAuthorButton, 1);
+                Grid.SetColumn(CommentAuthorButton, 0);
+                CommentGrid.Children.Add(CommentAuthorButton);
+                CommentAuthorButton.Click += (s, e) =>
+                {
+                    Frame.Navigate(typeof(ProfilePage), Comm.Author);
+                };
+
+                StackPanel CommentAuthorPanel = new StackPanel();
+                CommentAuthorPanel.Orientation = Orientation.Horizontal;
+                CommentAuthorButton.Content = CommentAuthorPanel;
+
+                Image CommentAuthorImage = new Image();
+                CommentAuthorPanel.Children.Add(CommentAuthorImage);
+
+                TextBlock CommentAuthorName = new TextBlock();
+                CommentAuthorName.Text = Comm.Author;
+                CommentAuthorPanel.Children.Add(CommentAuthorName);
+
+                Button LeaveCommentButton = new Button();
+                LeaveCommentButton.Style = App.Current.Resources["InvisibleButton"] as Style;
+                LeaveCommentButton.HorizontalAlignment = HorizontalAlignment.Left;
+                LeaveCommentButton.Content = "Ответить";
+                Grid.SetRow(LeaveCommentButton, 1);
+                Grid.SetColumn(LeaveCommentButton, 2);
+                CommentGrid.Children.Add(LeaveCommentButton);
+
+                TextBlock CommentRatingBlock = new TextBlock();
+                CommentRatingBlock.FontWeight = FontWeights.Bold;
+                CommentRatingBlock.HorizontalAlignment = HorizontalAlignment.Right;
+                CommentRatingBlock.Text = Comm.Rating.ToString();
+                if (Comm.Rating > 0)
+                    CommentRatingBlock.Foreground = new SolidColorBrush(Colors.Green);
+                if (Comm.Rating < 0)
+                    CommentRatingBlock.Foreground = new SolidColorBrush(Colors.Red);
+                Grid.SetRow(CommentRatingBlock, 1);
+                Grid.SetColumn(CommentRatingBlock, 3);
+                CommentGrid.Children.Add(CommentRatingBlock);
+
+                CommentsPanel.Children.Add(CommentGrid);
+            }
 
             // Время публикации и количество комментариев
             StackPanel FooterPanel = new StackPanel();

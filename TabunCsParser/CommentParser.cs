@@ -30,12 +30,12 @@ namespace TabunCsParser
 
         private int GetId()
         {
-            return int.Parse(RootNode.Attributes["data-id"].Value);
+            return int.Parse(RootNode.SelectSingleNode("//div[@class='folding']").Attributes["data-id"].Value);
         }
 
         private string GetAuthor()
         {
-            return RootNode.SelectSingleNode("//li[@class='comment-author ']").InnerText.Trim();
+            return RootNode.SelectSingleNode("//li[contains(@class, 'comment-author')]").InnerText.Trim();
         }
 
         private Uri GetAuthorImage()
@@ -50,7 +50,7 @@ namespace TabunCsParser
 
         private bool GetIsRead()
         {
-            return !RootNode.Attributes["class"].Value.Contains("comment-new");
+            return !RootNode.SelectSingleNode("//section").Attributes["class"].Value.Contains("comment-new");
         }
 
         private int GetRating()
