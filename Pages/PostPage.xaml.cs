@@ -13,7 +13,6 @@ using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using UWPTabunClient.Pages;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using TabunCsLibruary;
@@ -118,20 +117,55 @@ namespace UWPTabunClient.Pages
             Grid.SetRow(TagsContentBlock, 3);
             MainGrid.Children.Add(TagsContentBlock);
 
+            // Время публикации и количество комментариев
+            StackPanel FooterPanel = new StackPanel();
+            FooterPanel.Orientation = Orientation.Horizontal;
+            Grid.SetRow(FooterPanel, 4);
+            MainGrid.Children.Add(FooterPanel);
+
+            TextBlock DateTimeBlock = new TextBlock();
+            DateTimeBlock.Text = Post.DateTime;
+            FooterPanel.Children.Add(DateTimeBlock);
+
+            TextBlock CommentsCountBlock = new TextBlock();
+            CommentsCountBlock.Text = Post.CommentsCount + " Комментариев";
+            FooterPanel.Children.Add(CommentsCountBlock);
+
             // Комментарии
             StackPanel CommentsPanel = new StackPanel();
             CommentsPanel.Orientation = Orientation.Vertical;
-            Grid.SetRow(CommentsPanel, 4);
+            Grid.SetRow(CommentsPanel, 5);
             MainGrid.Children.Add(CommentsPanel);
             foreach (Comment Comm in Post.Comments)
             {
                 Grid CommentGrid = new Grid();
                 CommentGrid.HorizontalAlignment = HorizontalAlignment.Stretch;
-                CommentGrid.Margin = new Thickness(1);
                 if (Comm.IsRead)
                     CommentGrid.Background = new SolidColorBrush(Colors.LightGray);
                 else
                     CommentGrid.Background = new SolidColorBrush(Colors.Aqua);
+
+                // Рекурсивная лямбда-магия
+                int Nesting = 0;
+                Func<int, int> GetCommentNesting = null;
+                GetCommentNesting = (id) =>
+                {
+                    if (Comm.ParentId != 0)
+                    {
+                        foreach (Comment C in Post.Comments)
+                        {
+                            if (C.Id == id && C.ParentId == 0)
+                                break;
+                            if (id == C.Id)
+                            {
+                                Nesting++;
+                                return GetCommentNesting(C.ParentId);
+                            }
+                        }
+                    }
+                    return Nesting;
+                };
+                CommentGrid.Margin = new Thickness(GetCommentNesting(Comm.Id) * 10, 1, 1, 1);
 
                 RowDefinition RowDef0 = new RowDefinition();
                 RowDefinition RowDef1 = new RowDefinition();
@@ -196,20 +230,6 @@ namespace UWPTabunClient.Pages
 
                 CommentsPanel.Children.Add(CommentGrid);
             }
-
-            // Время публикации и количество комментариев
-            StackPanel FooterPanel = new StackPanel();
-            FooterPanel.Orientation = Orientation.Horizontal;
-            Grid.SetRow(FooterPanel, 4);
-            MainGrid.Children.Add(FooterPanel);
-
-            TextBlock DateTimeBlock = new TextBlock();
-            DateTimeBlock.Text = Post.DateTime;
-            FooterPanel.Children.Add(DateTimeBlock);
-
-            TextBlock CommentsCountBlock = new TextBlock();
-            CommentsCountBlock.Text = Post.CommentsCount + " Комментариев";
-            FooterPanel.Children.Add(CommentsCountBlock);
         }
 
         private void AuthorButton_Click(object sender, RoutedEventArgs e)
