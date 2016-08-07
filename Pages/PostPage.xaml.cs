@@ -238,30 +238,6 @@ namespace UWPTabunClient.Pages
             }
         }
 
-        private void AuthorButton_Click(object sender, RoutedEventArgs e)
-        {
-            //Frame.Navigate(typeof(ProfilePage), AuthorBlock.Text);
-        }
-
-        private void CommentAuthorButton_Click(object sender, RoutedEventArgs e)
-        {
-            var authorfield = (sender as Button).Tag.ToString();
-            Frame.Navigate(typeof(ProfilePage), authorfield);
-        }
-
-        // Костыль, потому что RichTextBlock не умеет в DataBindings
-        private void RichTextBlock_Loaded(object sender, RoutedEventArgs e)
-        {
-            var rtb = sender as RichTextBlock;
-            rtb.Blocks.Add(rtb.DataContext as Paragraph);
-        }
-
-        private void BlogButton_Click(object sender, RoutedEventArgs e)
-        {
-            string blogId = (sender as Button).Tag.ToString();
-            Frame.Navigate(typeof(BlogPage), blogId);
-        }
-
         /*private async void LeaveCommentButton_Click(object sender, RoutedEventArgs e)
         {
             //LeaveCommentDialog dialog = new LeaveCommentDialog(parser.postId, int.Parse((sender as Button).Tag.ToString()));
