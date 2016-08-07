@@ -173,8 +173,12 @@ namespace UWPTabunClient.Pages
                 ColumnDefinition ColDef1 = new ColumnDefinition();
                 ColumnDefinition ColDef2 = new ColumnDefinition();
                 ColumnDefinition ColDef3 = new ColumnDefinition();
+                //ColDef0.Width = GridLength.Auto;
+                ColDef1.Width = GridLength.Auto;
+                //ColDef2.Width = GridLength.Auto;
+                //ColDef3.Width = GridLength.Auto;
                 CommentGrid.RowDefinitions.Add(RowDef0);
-                CommentGrid.RowDefinitions.Add(RowDef1);
+                CommentGrid.RowDefinitions.Add(RowDef1);                
                 CommentGrid.ColumnDefinitions.Add(ColDef0);
                 CommentGrid.ColumnDefinitions.Add(ColDef1);
                 CommentGrid.ColumnDefinitions.Add(ColDef2);
@@ -182,6 +186,7 @@ namespace UWPTabunClient.Pages
 
                 RichTextBlock ContentBlock = new RichTextBlock();
                 ContentBlock.Style = App.Current.Resources["StandartHtmlView"] as Style;
+                ContentBlock.TextWrapping = TextWrapping.WrapWholeWords;
                 ContentBlock.Blocks.Add(await Parser.ConvertHTMLTextToParagraph(Comm.Text));
                 Grid.SetRow(ContentBlock, 0);
                 Grid.SetColumnSpan(ContentBlock, 4);
@@ -213,12 +218,13 @@ namespace UWPTabunClient.Pages
                 LeaveCommentButton.HorizontalAlignment = HorizontalAlignment.Left;
                 LeaveCommentButton.Content = "Ответить";
                 Grid.SetRow(LeaveCommentButton, 1);
-                Grid.SetColumn(LeaveCommentButton, 2);
+                Grid.SetColumn(LeaveCommentButton, 1);
                 CommentGrid.Children.Add(LeaveCommentButton);
 
                 TextBlock CommentRatingBlock = new TextBlock();
                 CommentRatingBlock.FontWeight = FontWeights.Bold;
                 CommentRatingBlock.HorizontalAlignment = HorizontalAlignment.Right;
+                CommentRatingBlock.Margin = new Thickness(0, 0, 20, 0);
                 CommentRatingBlock.Text = Comm.Rating.ToString();
                 if (Comm.Rating > 0)
                     CommentRatingBlock.Foreground = new SolidColorBrush(Colors.Green);
