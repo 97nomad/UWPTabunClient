@@ -213,8 +213,10 @@ namespace UWPTabunClient.Parsers
                 foreach (Inline i in parseResult)
                     hyperlink.Inlines.Add(i);
 
-                string link = normalizeUri(node.Attributes["href"].Value);
-                UriParser.isInnerLink(node.Attributes["href"].Value); // Ну и нафига это тут?
+                string link = "";
+                if (node.Attributes.Contains("href"))
+                    link = normalizeUri(node.Attributes["href"].Value);
+                //UriParser.isInnerLink(node.Attributes["href"].Value); // Ну и нафига это тут?
 
                 hyperlink.Click += (s, e) =>
                 {
