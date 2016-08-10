@@ -19,5 +19,10 @@ namespace TabunCsLibruary
         {
             return await TWebClient.GetPageAsync(TabunGlobalVariables.LinkRoot + PostId + ".html");
         }
+
+        public async Task<string> GetProfile(string Nickname)
+        {
+            return await TWebClient.GetPageAsync(TabunGlobalVariables.LinkProfile + Nickname + "/");
+        }
     }
 }

@@ -144,9 +144,7 @@
     <Compile Include="Parsers\AbstractParser.cs" />
     <Compile Include="Parsers\BlogParser.cs" />
     <Compile Include="Parsers\HtmlParser.cs" />
-    <Compile Include="Parsers\MainpageParser.cs" />
     <Compile Include="Parsers\MyProfileParser.cs" />
-    <Compile Include="Parsers\PostParser.cs" />
     <Compile Include="Parsers\ProfileParser.cs" />
     <Compile Include="Parsers\UriParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
