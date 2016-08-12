@@ -49,7 +49,7 @@ namespace TabunCsParser
         private Dictionary<Uri, string> GetBlogs()
         {
             Dictionary<Uri, string> Result = new Dictionary<Uri, string>();
-            HtmlNodeCollection BlogNodes = RootNode.SelectNodes("(//ul[@class='profile-dotted-list'])[2]/li[1]/strong/a");
+            HtmlNodeCollection BlogNodes = RootNode.SelectNodes("(//ul[@class='profile-dotted-list'])[2]/li/strong/a");
             foreach (HtmlNode BlogNode in BlogNodes)
             {
                 Result.Add(new Uri(BlogNode.Attributes["href"].Value), HtmlEntity.DeEntitize(BlogNode.InnerText));
