@@ -35,7 +35,7 @@ namespace UWPTabunClient.Pages
             if (e.Parameter != null)
                 int.TryParse(e.Parameter.ToString(), out PageNumber);
 
-            string RawPage = await new TabunMainPage().GetPage(PageNumber);
+            string RawPage = await new TabunAPI().GetMainPage(PageNumber);
             TabunCsParser.MainPage Page = new MainPageParser().Parse(RawPage);
             foreach (var P in Page.Posts)
             {

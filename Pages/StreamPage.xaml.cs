@@ -28,7 +28,7 @@ namespace UWPTabunClient.Pages
     {
         List<StreamElement> Comments;
         List<StreamElement> Topics;
-        TabunStream TStream;
+        TabunAPI TAPI;
         StreamParser Parser;
 
         public StreamPage()
@@ -36,7 +36,7 @@ namespace UWPTabunClient.Pages
             this.InitializeComponent();
             Comments = new List<StreamElement>();
             Topics = new List<StreamElement>();
-            TStream = new TabunStream();
+            TAPI = new TabunAPI();
             Parser = new StreamParser();
         }
 
@@ -62,7 +62,7 @@ namespace UWPTabunClient.Pages
             try
             {
                 
-                string RawComments = await TStream.GetNewComments(new Dictionary<string, string>
+                string RawComments = await TAPI.GetStreamNewComments(new Dictionary<string, string>
                 {
                     {"security_ls_key", Windows.Storage.ApplicationData.Current.LocalSettings.Values["livestreet_security_key"] as string }
                 });
@@ -78,7 +78,7 @@ namespace UWPTabunClient.Pages
         {
             try
             {
-                string RawTopics = await TStream.GetNewTopics(new Dictionary<string, string>
+                string RawTopics = await TAPI.GetStreamNewTopics(new Dictionary<string, string>
                 {
                     {"security_ls_key", Windows.Storage.ApplicationData.Current.LocalSettings.Values["livestreet_security_key"] as string }
                 });
