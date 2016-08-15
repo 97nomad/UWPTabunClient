@@ -24,5 +24,10 @@ namespace TabunCsLibruary
         {
             return await TWebClient.GetPageAsync(TabunGlobalVariables.LinkProfile + Nickname + "/");
         }
+
+        public async Task<string> GetBlog(string BlogName)
+        {
+            return await TWebClient.GetPageAsync(TabunGlobalVariables.LinkBlog + BlogName + "/");
+        }
     }
 }

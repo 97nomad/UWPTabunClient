@@ -108,8 +108,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractParser.cs" />
+    <Compile Include="BlogParser.cs" />
     <Compile Include="CommentParser.cs" />
     <Compile Include="MainPageParser.cs" />
+    <Compile Include="Models\Blog.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\MainPage.cs" />
     <Compile Include="Models\Post.cs" />

@@ -13,7 +13,7 @@ namespace TabunCsLibruary
 
         public static string LinkRoot = Protocol + Domain + "/";
         //public static string LinkRootWithoutSlash = Protocol + Domain;
-        //public static string LinkBlog = Protocol + Domain + "/blog/";
+        public static string LinkBlog = Protocol + Domain + "/blog/";
         public static string LinkMainpage = Protocol + Domain + "/index/";
         public static string LinkProfile = Protocol + Domain + "/profile/";
 

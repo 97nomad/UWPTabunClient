@@ -5,113 +5,38 @@
     xmlns:local="using:UWPTabunClient.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:data="using:UWPTabunClient.Models"
     mc:Ignorable="d">
 
     <ScrollViewer>
-        <StackPanel Orientation="Vertical">
+        <Grid Name="MainGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
             <ProgressBar IsIndeterminate="True"
-                         Name="LoadingBar"/>
-
-            <RelativePanel Name="HeaderPanel"
-                           Visibility="Collapsed">
-                <TextBlock Name="BlogName"
-                           FontSize="24"
-                           FontWeight="SemiBold"
-                           RelativePanel.AlignLeftWithPanel="True"/>
-            </RelativePanel>
+                         Name="LoadingBar"
+                         Grid.Row="0"
+                         Grid.ColumnSpan="3"/>
 
             <ListView Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                      Name="BlogPostsList"
-                      ItemsSource="{x:Bind posts}"
+                      Name="PostsList"
                       SelectionMode="None"
                       IsItemClickEnabled="True"
-                      ItemClick="BlogPostsList_ItemClick"
-                      Visibility="Collapsed">
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="data:Post">
-                        <Grid VerticalAlignment="Top"
-                              HorizontalAlignment="Stretch"
-                              Background="{ThemeResource AppBarBackgroundThemeBrush}"
-                              Margin="5,5,10,5"
-                              Tag="{x:Bind id}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Text="{x:Bind title}"
-                               Name="TitleBlock"
-                               Grid.Row="0"
-                               TextWrapping="WrapWholeWords"
-                               HorizontalAlignment="Left"
-                               FontWeight="SemiBold"
-                               FontSize="18"/>
-
-                            <RelativePanel Grid.Row="1">
-                                <Button RelativePanel.AlignLeftWithPanel="True" 
-                                Name="AuthorBlock"
-                                Click="AuthorBlock_Click"
-                                Tag="{x:Bind author}"
-                                Style="{StaticResource InvisibleButton}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="{x:Bind author_image}"
-                                       x:Name="imageContorl"/>
-                                        <TextBlock Text="{x:Bind author}" />
-                                    </StackPanel>
-                                </Button>
-                                <TextBlock Text=" в блоге "
-                                   Name="in_blog"
-                                   RelativePanel.RightOf="AuthorBlock"
-                                   Foreground="DarkGray"/>
-                                <TextBlock Text="{x:Bind blog}" 
-                                   RelativePanel.RightOf="in_blog"/>
-                                <TextBlock Text="{x:Bind rating}" 
-                                   RelativePanel.AlignRightWithPanel="True"/>
-                            </RelativePanel>
-
-                            <StackPanel Orientation="Vertical" Grid.Row="2">
-                                <RichTextBlock DataContext="{x:Bind text}" 
-                                       Style="{StaticResource StandartHtmlView}"
-                                       Loaded="RichTextBlock_Loaded"/>
-                            </StackPanel>
-
-                            <RelativePanel Grid.Row="3">
-                                <StackPanel Orientation="Horizontal" 
-                                    RelativePanel.AlignLeftWithPanel="True"
-                                    RelativePanel.LeftOf="datetime">
-                                    <TextBlock Text="Теги: "
-                                   Name="_tags"/>
-                                    <TextBlock Text="{x:Bind tags}"
-                                       RelativePanel.RightOf="_tags"
-                                       TextWrapping="WrapWholeWords"
-                                       Margin="10,0,10,0"/>
-                                </StackPanel>
-                                <TextBlock Text="{x:Bind datatime}" 
-                                   Name="datetime"
-                                   RelativePanel.AlignRightWithPanel="True"
-                                   Margin="0,0,10,0"/>
-                                <TextBlock Text="{x:Bind commentsCount}"
-                                           Name="CommentsCountBlock"
-                                           RelativePanel.Below="datetime"
-                                           RelativePanel.AlignLeftWithPanel="True"
-                                           Margin="0,0,10,0" />
-                                <TextBlock Text="Комментариев"
-                                           RelativePanel.RightOf="CommentsCountBlock"
-                                           RelativePanel.AlignVerticalCenterWith="CommentsCountBlock"
-                                           Margin="0,0,10,0" />
-                            </RelativePanel>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
+                      Visibility="Collapsed"
+                      Grid.Row="2"
+                      Grid.ColumnSpan="3">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>
-        </StackPanel>
+        </Grid>
     </ScrollViewer>
 </Page>
