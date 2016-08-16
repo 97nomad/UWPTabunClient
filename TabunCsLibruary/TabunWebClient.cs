@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -42,14 +44,28 @@ namespace TabunCsLibruary
 
         public async Task<string> GetPostAsync(string Url, Dictionary<string, string> Parameters = null)
         {
-            HttpClient Client = new HttpClient();
-            if (Parameters == null) Parameters = new Dictionary<string, string>();
+            CookieContainer Cookies = new CookieContainer();
+            HttpClientHandler Handler = new HttpClientHandler()
+            {
+                CookieContainer = Cookies,
+                UseCookies = true,
+            };
 
-            FormUrlEncodedContent Content = new FormUrlEncodedContent(Parameters);
-            HttpResponseMessage Response = await Client.PostAsync(Url, Content);
-            Response.EnsureSuccessStatusCode();
+            await CheckLSKAndSID();
+            ApplicationDataContainer Storage = ApplicationData.Current.LocalSettings;
+            Cookies.Add(new Uri(TabunGlobalVariables.LinkRoot),
+                new Cookie("TABUNSESSIONID", (Storage.Values["sessionId"] as string)));
 
-            return await Response.Content.ReadAsStringAsync();
+            using (HttpClient Client = new HttpClient(Handler))
+            {
+                if (Parameters == null) Parameters = new Dictionary<string, string>();
+
+                FormUrlEncodedContent Content = new FormUrlEncodedContent(Parameters);
+                HttpResponseMessage Response = await Client.PostAsync(Url, Content);
+                Response.EnsureSuccessStatusCode();
+
+                return await Response.Content.ReadAsStringAsync();
+            }
         }
 
         public async Task<string> GetPageAsync(string Url)
@@ -70,6 +86,35 @@ namespace TabunCsLibruary
                 response.EnsureSuccessStatusCode();
 
                 return await response.Content.ReadAsStringAsync();
+            }
+        }
+
+
+        // Чёртова магия, без которой нормально не работает стрим
+        public async Task<string> GetAjaxAsync(string uri, Dictionary<string, string> Parameters)
+        {
+            ApplicationDataContainer Storage = ApplicationData.Current.LocalSettings;
+            HttpWebRequest Request = WebRequest.Create(uri) as HttpWebRequest;
+
+            Request.ContentType = "application/x-www-form-urlencoded; charset=UTF-8";
+            Request.Accept = "application/json, text/javascript, */*; q=0.01";
+            Request.Method = "POST";
+            Request.Headers["X-Requested-With"] = "XMLHttpRequest";
+
+            using (StreamWriter Writer = new StreamWriter(await Request.GetRequestStreamAsync()))
+            {
+                foreach (KeyValuePair<string, string> Pair in Parameters)
+                    Writer.WriteLine(Pair.Key + "=" + Pair.Value);
+                Writer.Flush();
+            }
+
+            var Response = await Request.GetResponseAsync();
+
+            using (var reader = new StreamReader(Response.GetResponseStream()))
+            {
+                string responseString = reader.ReadToEnd();
+                var json = JsonConvert.DeserializeObject<JsonResponse>(responseString).sText;
+                return json;
             }
         }
     }

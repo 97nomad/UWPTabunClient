@@ -62,10 +62,7 @@ namespace UWPTabunClient.Pages
             try
             {
                 
-                string RawComments = await TAPI.GetStreamNewComments(new Dictionary<string, string>
-                {
-                    {"security_ls_key", Windows.Storage.ApplicationData.Current.LocalSettings.Values["livestreet_security_key"] as string }
-                });
+                string RawComments = await TAPI.GetStreamNewComments();
                 Comments = Parser.Parse(RawComments);
                 Bindings.Update();
             } catch (Exception exc)
@@ -78,10 +75,7 @@ namespace UWPTabunClient.Pages
         {
             try
             {
-                string RawTopics = await TAPI.GetStreamNewTopics(new Dictionary<string, string>
-                {
-                    {"security_ls_key", Windows.Storage.ApplicationData.Current.LocalSettings.Values["livestreet_security_key"] as string }
-                });
+                string RawTopics = await TAPI.GetStreamNewTopics();
                 Topics = Parser.Parse(RawTopics);
                 Bindings.Update();
             } catch (Exception exc)
