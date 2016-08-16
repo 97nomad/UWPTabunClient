@@ -88,34 +88,5 @@ namespace TabunCsLibruary
                 return await response.Content.ReadAsStringAsync();
             }
         }
-
-
-        // Чёртова магия, без которой нормально не работает стрим
-        public async Task<string> GetAjaxAsync(string uri, Dictionary<string, string> Parameters)
-        {
-            ApplicationDataContainer Storage = ApplicationData.Current.LocalSettings;
-            HttpWebRequest Request = WebRequest.Create(uri) as HttpWebRequest;
-
-            Request.ContentType = "application/x-www-form-urlencoded; charset=UTF-8";
-            Request.Accept = "application/json, text/javascript, */*; q=0.01";
-            Request.Method = "POST";
-            Request.Headers["X-Requested-With"] = "XMLHttpRequest";
-
-            using (StreamWriter Writer = new StreamWriter(await Request.GetRequestStreamAsync()))
-            {
-                foreach (KeyValuePair<string, string> Pair in Parameters)
-                    Writer.WriteLine(Pair.Key + "=" + Pair.Value);
-                Writer.Flush();
-            }
-
-            var Response = await Request.GetResponseAsync();
-
-            using (var reader = new StreamReader(Response.GetResponseStream()))
-            {
-                string responseString = reader.ReadToEnd();
-                var json = JsonConvert.DeserializeObject<JsonResponse>(responseString).sText;
-                return json;
-            }
-        }
     }
 }
