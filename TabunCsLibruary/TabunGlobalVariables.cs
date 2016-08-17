@@ -20,7 +20,7 @@ namespace TabunCsLibruary
         public static string LinkAjaxStreamComments = Protocol + Domain + "/ajax/stream/comment/";
         public static string LinkAjaxStreamTopics = Protocol + Domain + "/ajax/stream/topic/";
         public static string LinkAjaxAddComment = Protocol + Domain + "/blog/ajaxaddcomment/";
-        //public static string LinkAjaxResponseComment = Protocol + Domain + "/blog/ajaxresponsecomment/";
+        public static string LinkAjaxResponseComment = Protocol + Domain + "/blog/ajaxresponsecomment/";
         //public static string LinkAjaxLogin = Protocol + Domain + "/login/ajax-login?login=";
 
         public static string LinkLogin = Protocol + Domain + "/login/";

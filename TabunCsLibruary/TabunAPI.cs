@@ -98,5 +98,17 @@ namespace TabunCsLibruary
             var ParsedJson = JsonConvert.DeserializeObject<JsonResponse>(Result);
             return !ParsedJson.bStateError;
         }
+
+        public async Task<string> GetNewTopicComments(int PostId, int LastCommentId)
+        {
+            Dictionary<string, string> Parameters = new Dictionary<string, string>
+            {
+                { "idCommentLast", LastCommentId.ToString()},
+                { "idTarget", PostId.ToString() },
+                { "typeTarget", "topic" }
+            };
+
+            return await TWebClient.GetPostAsync(TabunGlobalVariables.LinkAjaxResponseComment, Parameters);
+        }
     }
 }
