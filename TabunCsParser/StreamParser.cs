@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,9 @@ namespace TabunCsParser
 
         public List<StreamElement> Parse(string Page)
         {
-            RootNode = GetRootNodeOfPage(Page);
+            var Json = JsonConvert.DeserializeObject<JsonResponse>(Page).sText;
+
+            RootNode = GetRootNodeOfPage(Json);
             List<StreamElement> Result = new List<StreamElement>();
 
             HtmlNodeCollection RawElements = RootNode.SelectNodes("//ul[@class='latest-list']/li");
