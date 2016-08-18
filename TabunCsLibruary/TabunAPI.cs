@@ -80,7 +80,7 @@ namespace TabunCsLibruary
             return await TWebClient.GetPostAsync(TabunGlobalVariables.LinkAjaxStreamTopics, Parameters);
         }
 
-        public async Task<bool> AddComment(int PostId, int ReplyId, string Text)
+        public async Task<string> AddComment(int PostId, int ReplyId, string Text)
         {
             await CheckLSKAndID();
             ApplicationDataContainer Storage = ApplicationData.Current.LocalSettings;
@@ -92,9 +92,7 @@ namespace TabunCsLibruary
                 { "security_ls_key", Storage.Values["livestreet_security_key"] as string },
             };
 
-            var Result = await TWebClient.GetPostAsync(TabunGlobalVariables.LinkAjaxAddComment, Parameters);
-            var ParsedJson = JsonConvert.DeserializeObject<JsonResponse>(Result);
-            return !ParsedJson.bStateError;
+            return await TWebClient.GetPostAsync(TabunGlobalVariables.LinkAjaxAddComment, Parameters);
         }
 
         public async Task<string> GetNewTopicComments(int PostId, int LastCommentId)
