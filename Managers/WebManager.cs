@@ -119,6 +119,13 @@ namespace UWPTabunClient.Managers
             }
         }
 
+        public async Task<SoftwareBitmapSource> GetCachedImageSource(Uri Url)
+        {
+            SoftwareBitmapSource Source = new SoftwareBitmapSource();
+            await Source.SetBitmapAsync(await getCachedImageAsync(Url.ToString()));
+            return Source;
+        }
+
         public async Task<SoftwareBitmap> getCachedImageAsync(string url)
         {
             // Провека, есть ли изображение в пуле

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using TabunCsLibruary;
 using TabunCsParser;
+using UWPTabunClient.Managers;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Text;
@@ -123,7 +124,7 @@ namespace UWPTabunClient.Pages
             MainGrid.Children.Add(AvatarAndAboutBlock);
 
             Image Avatar100x100Image = new Image();
-            // TODO: Добавить загрузку картинки
+            Avatar100x100Image.Source = await WebManager.Instance.GetCachedImageSource(Profile.Avatar100x100);
             AvatarAndAboutBlock.Children.Add(Avatar100x100Image);
 
             StackPanel AboutBlock = new StackPanel();

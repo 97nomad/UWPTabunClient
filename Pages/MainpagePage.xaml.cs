@@ -7,6 +7,8 @@ using TabunCsParser;
 using TabunCsLibruary;
 using Windows.UI.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Media.Imaging;
+using UWPTabunClient.Managers;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -115,6 +117,7 @@ namespace UWPTabunClient.Pages
             AuthorButton.Content = AuthorPanel;
 
             Image AuthorImage = new Image();
+            AuthorImage.Source = await WebManager.Instance.GetCachedImageSource(Post.AuthorImage);
             AuthorPanel.Children.Add(AuthorImage);
 
             TextBlock AuthorName = new TextBlock();

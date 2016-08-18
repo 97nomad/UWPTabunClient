@@ -19,6 +19,7 @@ using TabunCsLibruary;
 using TabunCsParser;
 using Windows.UI.Text;
 using Windows.UI;
+using UWPTabunClient.Managers;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -81,6 +82,7 @@ namespace UWPTabunClient.Pages
             AuthorButton.Content = AuthorPanel;
 
             Image AuthorImage = new Image();
+            AuthorImage.Source = await WebManager.Instance.GetCachedImageSource(Post.AuthorImage);
             AuthorPanel.Children.Add(AuthorImage);
 
             TextBlock AuthorName = new TextBlock();
@@ -207,6 +209,7 @@ namespace UWPTabunClient.Pages
                 CommentAuthorButton.Content = CommentAuthorPanel;
 
                 Image CommentAuthorImage = new Image();
+                CommentAuthorImage.Source = await WebManager.Instance.GetCachedImageSource(Comm.AuthorImage);
                 CommentAuthorPanel.Children.Add(CommentAuthorImage);
 
                 TextBlock CommentAuthorName = new TextBlock();
