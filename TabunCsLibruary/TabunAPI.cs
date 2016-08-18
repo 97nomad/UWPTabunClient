@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -105,6 +104,19 @@ namespace TabunCsLibruary
             };
 
             return await TWebClient.GetPostAsync(TabunGlobalVariables.LinkAjaxResponseComment, Parameters);
+        }
+
+        public async Task<string> Login(string Login, string Password)
+        {
+            await CheckLSKAndID();
+            ApplicationDataContainer Storage = ApplicationData.Current.LocalSettings;
+            string AuthorizeUri = TabunGlobalVariables.LinkAjaxLogin
+                + Login
+                + "&password="
+                + Password
+                + "&security_ls_key="
+                + Storage.Values["livestreet_security_key"] as string;
+            return await TWebClient.GetPageAsync(AuthorizeUri);
         }
     }
 }

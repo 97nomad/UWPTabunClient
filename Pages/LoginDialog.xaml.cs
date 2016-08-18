@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Navigation;
 using UWPTabunClient.Models;
 using UWPTabunClient.Parsers;
 using UWPTabunClient.Managers;
+using TabunCsLibruary;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -42,23 +43,7 @@ namespace UWPTabunClient.Pages
 
         private async void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            rootNode = await parser.getRootNodeOfPage(GlobalVariables.linkLogin);
-            string livestreet_security_key = AbstractParser.getLivestreetSecurityKey(rootNode);
-            string sessionId = AbstractParser.getSessionId(rootNode);
-            string authorize_uri = GlobalVariables.linkAjaxLogin
-                + Login.Text
-                + "&password="
-                + Password.Password
-                + "&security_ls_key="
-                + livestreet_security_key;
-            HttpClient client = new HttpClient();
-
-            var response = await client.GetStringAsync(authorize_uri);
-
-            var appSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            appSettings.Values["livestreet_security_key"] = livestreet_security_key;
-            appSettings.Values["sessionId"] = sessionId;
-
+            var response = await new TabunAPI().Login(Login.Text, Password.Password);
             JsonResponse json = JsonConvert.DeserializeObject<JsonResponse>(response);
             if (json.bStateError == false)
                 isLoginSuccessed = true;
