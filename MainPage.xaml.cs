@@ -45,7 +45,7 @@ namespace UWPTabunClient
             if (page == null)
             {
                 CommentRefreshButton.Visibility = Visibility.Collapsed;
-            } else if ((ProfileFrame.Content as MyProfilePage).isLoggedIn)
+            } else if ((ProfileFrame.Content as MyProfilePage).IsLoggedIn)
             {
                 CommentRefreshButton.Visibility = Visibility.Visible;
             } else
@@ -95,13 +95,13 @@ namespace UWPTabunClient
             CommentRefreshButton.IsEnabled = true;
         }
 
-        private void ProfileButton_Click(object sender, RoutedEventArgs e)
+        /*private void ProfileButton_Click(object sender, RoutedEventArgs e)
         {
             MyProfilePage page = ProfileFrame.Content as MyProfilePage;
-            if (page.isLoggedIn)
+            if (page.IsLoggedIn)
             {
                 MainFrame.Navigate(typeof(ProfilePage), page.username);
             }
-        }
+        }*/
     }
 }

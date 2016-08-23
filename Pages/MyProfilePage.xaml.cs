@@ -14,7 +14,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using UWPTabunClient.Parsers;
+using TabunCsLibruary;
+using TabunCsParser;
+using UWPTabunClient.Managers;
 
 // Шаблон элемента пустой страницы задокументирован по адресу http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,21 +27,16 @@ namespace UWPTabunClient.Pages
     /// </summary>
     public sealed partial class MyProfilePage : Page
     {
-        private MyProfileParser parser;
-        public bool isLoggedIn;
-        public string username;
-
         private LoginDialog loginDialog;
         private ExitDialog exitDialog;
         private Frame frame;
+        public bool IsLoggedIn;
 
         public MyProfilePage()
         {
             this.InitializeComponent();
-            parser = new MyProfileParser();
             loginDialog = new LoginDialog();
             exitDialog = new ExitDialog();
-            isLoggedIn = false;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -47,51 +44,31 @@ namespace UWPTabunClient.Pages
             base.OnNavigatedTo(e);
             frame = e.Parameter as Frame;
 
-            if (await parser.loadPage())
+            string RawPage = await new TabunAPI().GetMainPage();
+            MyProfile Profile = new MyProfileParser().Parse(RawPage);
+
+            IsLoggedIn = Profile.IsLoggedIn;
+            ProfileImage.Source = await WebManager.Instance.GetCachedImageSource(Profile.Avatar);
+            LoginBlock.Text = Profile.Nickname;
+            ForceBlock.Text = Profile.Force.ToString();
+            VotesBlock.Text = Profile.Rating.ToString();
+
+            ProfileButton.Click += async (s, ev) =>
             {
-                if (parser.isUserLoggedIn())
+                if (!IsLoggedIn)
                 {
-                    isLoggedIn = true;
-                    username = parser.getLogin();
-                    ProfileImage.Source = await parser.getProfileImage();
-                    LoginBlock.Text = username;
-                    ForceBlock.Text = parser.getStrength();
-                    VotesBlock.Text = parser.getRating();
+                    await loginDialog.ShowAsync();
+                    if (loginDialog.isLoginSuccessed)
+                    {
+                        loginDialog.isLoginSuccessed = false;
+                        Frame.Navigate(typeof(MyProfilePage));
+                    }
                 }
                 else
                 {
-                    isLoggedIn = false;
-                    LoginBlock.Text = "Guest";
-                    ForceBlock.Text = "null";
-                    VotesBlock.Text = "null";
+                    frame.Navigate(typeof(ProfilePage), Profile.Nickname);
                 }
-            }
-        }
-
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (!isLoggedIn)
-            {
-                await loginDialog.ShowAsync();
-                if (loginDialog.isLoginSuccessed)
-                {
-                    loginDialog.isLoginSuccessed = false;
-                    isLoggedIn = true;
-                    Frame.Navigate(typeof(MyProfilePage));
-                }
-            } else
-            {
-                frame.Navigate(typeof(ProfilePage), username);
-                /*await exitDialog.ShowAsync();
-                if (exitDialog.isSecondButtonWasClicked)
-                {
-                    await loginDialog.logout();
-                    exitDialog.isSecondButtonWasClicked = false;
-                    isLoggedIn = false;
-                    Frame.Navigate(typeof(MyProfilePage));
-                }*/
-            }
-
+            };
         }
     }
 }

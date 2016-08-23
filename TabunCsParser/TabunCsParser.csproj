@@ -115,10 +115,12 @@
     <Compile Include="Models\Blog.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\MainPage.cs" />
+    <Compile Include="Models\MyProfile.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Models\PostPreview.cs" />
     <Compile Include="Models\Profile.cs" />
     <Compile Include="Models\StreamElement.cs" />
+    <Compile Include="MyProfileParser.cs" />
     <Compile Include="PostParser.cs" />
     <Compile Include="PostPreviewParser.cs" />
     <Compile Include="ProfileParser.cs" />

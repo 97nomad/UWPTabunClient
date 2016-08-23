@@ -36,8 +36,7 @@
             <SplitView.Pane>
                 <StackPanel Orientation="Vertical">
                     <Button Style="{StaticResource InvisibleButton}"
-                            Name="ProfileButton"
-                            Click="ProfileButton_Click">
+                            Name="ProfileButton">
                         <Frame Name="ProfileFrame"/>
                     </Button>
                     <ListView Name="PaneList"

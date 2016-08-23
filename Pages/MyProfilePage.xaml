@@ -8,7 +8,6 @@
     mc:Ignorable="d">
 
     <Button Style="{StaticResource InvisibleButton}"
-            Click="Button_Click"
             Name="ProfileButton">
         <StackPanel>
             <StackPanel Orientation="Horizontal"
