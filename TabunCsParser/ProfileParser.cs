@@ -38,7 +38,13 @@ namespace TabunCsParser
 
         private string GetAbout()
         {
-            return RootNode.SelectSingleNode("//div[@class='profile-info-about']/div[@class='text']").InnerHtml;
+            try
+            {
+                return RootNode.SelectSingleNode("//div[@class='profile-info-about']/div[@class='text']").InnerHtml;
+            } catch (NullReferenceException)
+            {
+                return "";
+            }
         }
 
         private Uri GetAvatar100x100()
@@ -49,27 +55,48 @@ namespace TabunCsParser
         private Dictionary<Uri, string> GetBlogs()
         {
             Dictionary<Uri, string> Result = new Dictionary<Uri, string>();
-            HtmlNodeCollection BlogNodes = RootNode.SelectNodes("(//ul[@class='profile-dotted-list'])[2]/li/strong/a");
-            foreach (HtmlNode BlogNode in BlogNodes)
+            try
             {
-                Result.Add(new Uri(BlogNode.Attributes["href"].Value), HtmlEntity.DeEntitize(BlogNode.InnerText));
-            }
+                HtmlNodeCollection BlogNodes = RootNode.SelectNodes("(//ul[@class='profile-dotted-list'])[2]/li/strong/a");
+                foreach (HtmlNode BlogNode in BlogNodes)
+                {
+                    Result.Add(new Uri(BlogNode.Attributes["href"].Value), HtmlEntity.DeEntitize(BlogNode.InnerText));
+                }
+            } catch (NullReferenceException) { }
             return Result;
         }
 
         private string GetDateOfBirdth()
         {
-            return RootNode.SelectSingleNode("(//ul[@class='profile-dotted-list'])[1]/li[2]/strong").InnerText.Trim();
+            try
+            {
+                return RootNode.SelectSingleNode("(//ul[@class='profile-dotted-list'])[1]/li[2]/strong").InnerText.Trim();
+            } catch (NullReferenceException)
+            {
+                return "";
+            }
         }
 
         private string GetDateOfLastVisite()
         {
-            return RootNode.SelectSingleNode("(//ul[@class='profile-dotted-list'])[2]/li[3]/strong").InnerText.Trim();
+            try
+            {
+                return RootNode.SelectSingleNode("(//ul[@class='profile-dotted-list'])[2]/li[3]/strong").InnerText.Trim();
+            } catch (NullReferenceException)
+            {
+                return "";
+            }
         }
 
         private string GetDateOfRegistration()
         {
-            return RootNode.SelectSingleNode("(//ul[@class='profile-dotted-list'])[2]/li[2]/strong").InnerText.Trim();
+            try
+            {
+                return RootNode.SelectSingleNode("(//ul[@class='profile-dotted-list'])[2]/li[2]/strong").InnerText.Trim();
+            } catch (NullReferenceException)
+            {
+                return "";
+            }
         }
 
         private float GetForce()
@@ -82,19 +109,28 @@ namespace TabunCsParser
         private Dictionary<string, Uri> GetFriends()
         {
             Dictionary<string, Uri> Result = new Dictionary<string, Uri>();
-            HtmlNodeCollection FriendNodes = RootNode.SelectNodes("//ul[@class='user-list-avatar']/li");
-            foreach (HtmlNode FriendNode in FriendNodes)
+            try
             {
-                Result.Add(
-                    FriendNode.InnerText.Trim(),
-                    new Uri(FriendNode.SelectSingleNode(".//img[@class='avatar']").Attributes["src"].Value));
-            }
+                HtmlNodeCollection FriendNodes = RootNode.SelectNodes("//ul[@class='user-list-avatar']/li");
+                foreach (HtmlNode FriendNode in FriendNodes)
+                {
+                    Result.Add(
+                        FriendNode.InnerText.Trim(),
+                        new Uri(FriendNode.SelectSingleNode(".//img[@class='avatar']").Attributes["src"].Value));
+                }
+            } catch (NullReferenceException) { }
             return Result;
         }
 
         private string GetName()
         {
-            return HtmlEntity.DeEntitize(RootNode.SelectSingleNode("//p[@class='user-name']").InnerText.Trim());
+            try
+            {
+                return HtmlEntity.DeEntitize(RootNode.SelectSingleNode("//p[@class='user-name']").InnerText.Trim());
+            } catch (NullReferenceException)
+            {
+                return "";
+            }
         }
 
         private string GetNickname()
@@ -104,7 +140,13 @@ namespace TabunCsParser
 
         private string GetPlace()
         {
-            return HtmlEntity.DeEntitize(RootNode.SelectSingleNode("//strong[@itemprop='address']").InnerText.Trim());
+            try
+            {
+                return HtmlEntity.DeEntitize(RootNode.SelectSingleNode("//strong[@itemprop='address']").InnerText.Trim().Replace("\n", String.Empty).Replace("\t", String.Empty).Replace(",", ", ")); // Какая-то странная дичь
+            } catch (NullReferenceException)
+            {
+                return "";
+            }
         }
 
         private Uri GetProfilePhoto()
@@ -121,7 +163,13 @@ namespace TabunCsParser
 
         private string GetSex()
         {
-            return RootNode.SelectSingleNode("(//ul[@class='profile-dotted-list'])[1]/li[1]/strong").InnerText.Trim();
+            try
+            {
+                return RootNode.SelectSingleNode("(//ul[@class='profile-dotted-list'])[1]/li[1]/strong").InnerText.Trim();
+            } catch (NullReferenceException)
+            {
+                return "";
+            }
         }
 
         private int GetVotes()

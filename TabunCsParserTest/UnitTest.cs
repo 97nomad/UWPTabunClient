@@ -81,7 +81,7 @@ namespace TabunCsParserTest
 
             Assert.AreEqual(ParsedProfile.Force, 0.0f, "Сила");
 
-            Assert.AreEqual(ParsedProfile.Friends.Count, 1, "Количество друзей");
+            Assert.AreEqual(ParsedProfile.Friends.Count, 0, "Количество друзей");
 
             Assert.AreEqual(ParsedProfile.Name, "", "Имя");
 
