@@ -103,6 +103,8 @@ namespace UWPTabunClient.Pages
 
             TextBlock RatingBlock = new TextBlock();
             RatingBlock.Text = Post.Rating;
+            RatingBlock.Margin = new Thickness(0, 0, 10, 0);
+            RatingBlock.FontWeight = FontWeights.SemiBold;
             HeadPanel.Children.Add(RatingBlock);
 
             Button AuthorButton = new Button();
@@ -127,7 +129,8 @@ namespace UWPTabunClient.Pages
             HeadPanel.Children.Add(AuthorButton);
 
             TextBlock InBlog = new TextBlock();
-            InBlog.Text = " в блоге ";
+            InBlog.Text = "в блоге";
+            InBlog.Margin = new Thickness(5, 0, 5, 0);
             HeadPanel.Children.Add(InBlog);
 
             Button BlogButton = new Button();
