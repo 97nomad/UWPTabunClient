@@ -285,7 +285,8 @@ namespace UWPTabunClient.Pages
                 FriendPanel.Orientation = Orientation.Vertical;
 
                 Image FriendAvatar = new Image();
-                //TODO: Добавить загрузку изображения
+                FriendAvatar.Stretch = Stretch.None;
+                FriendAvatar.Source = await WebManager.Instance.GetCachedImageSource(Friend.Value);
                 FriendPanel.Children.Add(FriendAvatar);
 
                 TextBlock FriendName = new TextBlock();
