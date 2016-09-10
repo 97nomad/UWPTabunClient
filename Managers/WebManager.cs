@@ -122,7 +122,7 @@ namespace UWPTabunClient.Managers
         public async Task<SoftwareBitmapSource> GetCachedImageSource(Uri Url)
         {
             SoftwareBitmapSource Source = new SoftwareBitmapSource();
-            await Source.SetBitmapAsync(await getCachedImageAsync(Url.ToString().Replace("file", "https")));
+            await Source.SetBitmapAsync(await getCachedImageAsync(Url.ToString().Replace("file://", "https://")));
             return Source;
         }
 
