@@ -52,7 +52,7 @@ namespace TabunCsParser
 
         private Uri GetAuthorImage()
         {
-            return new Uri(RootNode.SelectSingleNode("//img[@class='avatar']").Attributes["src"].Value);
+            return new Uri(RootNode.SelectSingleNode("//div[@class='topic-info']/a/img[@class='avatar']").Attributes["src"].Value);
         }
 
         private string GetBlog()
