@@ -84,6 +84,7 @@ namespace UWPTabunClient.Pages
             PostGrid.VerticalAlignment = VerticalAlignment.Top;
             PostGrid.HorizontalAlignment = HorizontalAlignment.Stretch;
             PostGrid.Tag = Post.Id;
+            PostGrid.Margin = new Thickness(0, 0, 0, 10);
 
             // Заголовок
             TextBlock Title = new TextBlock();
@@ -103,6 +104,8 @@ namespace UWPTabunClient.Pages
 
             TextBlock RatingBlock = new TextBlock();
             RatingBlock.Text = Post.Rating;
+            RatingBlock.Margin = new Thickness(0, 0, 10, 0);
+            RatingBlock.FontWeight = FontWeights.SemiBold;
             HeadPanel.Children.Add(RatingBlock);
 
             Button AuthorButton = new Button();
@@ -128,6 +131,7 @@ namespace UWPTabunClient.Pages
 
             TextBlock InBlog = new TextBlock();
             InBlog.Text = " в блоге ";
+            InBlog.Margin = new Thickness(5, 0, 5, 0);
             HeadPanel.Children.Add(InBlog);
 
             Button BlogButton = new Button();
@@ -166,6 +170,8 @@ namespace UWPTabunClient.Pages
 
             TextBlock CommentsCountBlock = new TextBlock();
             CommentsCountBlock.Text = Post.CommentsCount + " Комментариев";
+            CommentsCountBlock.Margin = new Thickness(10, 0, 0, 0);
+            CommentsCountBlock.FontWeight = FontWeights.SemiBold;
             FooterPanel.Children.Add(CommentsCountBlock);
 
             PostsList.Items.Add(PostGrid);

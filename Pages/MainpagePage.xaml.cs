@@ -84,6 +84,7 @@ namespace UWPTabunClient.Pages
             PostGrid.VerticalAlignment = VerticalAlignment.Top;
             PostGrid.HorizontalAlignment = HorizontalAlignment.Stretch;
             PostGrid.Tag = Post.Id;
+            PostGrid.Margin = new Thickness(0, 0, 0, 10);
 
             // Заголовок
             TextBlock Title = new TextBlock();
@@ -168,6 +169,8 @@ namespace UWPTabunClient.Pages
 
             TextBlock CommentsCountBlock = new TextBlock();
             CommentsCountBlock.Text = Post.CommentsCount + " Комментариев";
+            CommentsCountBlock.Margin = new Thickness(10, 0, 0, 0);
+            CommentsCountBlock.FontWeight = FontWeights.SemiBold;
             FooterPanel.Children.Add(CommentsCountBlock);
 
             PostsList.Items.Add(PostGrid);
