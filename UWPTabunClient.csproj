@@ -96,7 +96,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Managers\CacheManager.cs" />
-    <Compile Include="Managers\CrutchManager.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
